@@ -1,13 +1,10 @@
-test_count= int(input())
-test_set= list(map(int, input().split()))
+test_input= input()
+test_set= set()
 
-test_set2= list(set(test_set))
-test_set3= sorted(test_set2)
+for i in range( len(test_input)):
+    for j in range( i, len(test_input) ):
+        test_case= test_input[i:j+1]
+        test_set.add(test_case)
 
-test_dic = {}
-for i in range(len(test_set3)):
-    test_dic[ test_set3[i] ]= i
-
-for num in test_set:
-    print(test_dic[num], end=' ')
+print(len(test_set))
 
