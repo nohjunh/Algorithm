@@ -1,12 +1,7 @@
-test_count= int(input())
-test_set={}
-for _ in range(test_count):
-    x=input()
-    test_set[x]= len(x)
+test_count= input()
+solve_list= list(test_count)
 
-result = sorted(test_set.items())
-result1 = sorted(result, key=lambda x: x[1])
+solve_list.sort(reverse= True)
 
-
-for a in result1:
-    print(a[0])
+for i in solve_list:
+    print(i, end="")
