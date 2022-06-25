@@ -1,13 +1,14 @@
-import sys
+count, max = map(int, input().split())
+test_input=list(map(int, input().split()))
+test_set=[]
+for i in range(count):
+    for j in range(i+1, count):
+        for k in range(j+1, count):
+            sum=test_input[i]+test_input[j]+test_input[k]
+            if sum>max:
+                continue
+            else:
+                test_set.append(sum)
 
-a,b = map(int, sys.stdin.readline().split())
-test_list=list(map(int, sys.stdin.readline().split()))
-temp = [0]
-sum=0
-for i in test_list:
-    sum+=i
-    temp.append(sum)
-
-for i in range(b):
-    _from, _to= map(int, sys.stdin.readline().split())
-    print(temp[_to] - temp[_from-1])
+test_set.sort(reverse=True)
+print(test_set[0])
