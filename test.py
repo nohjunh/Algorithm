@@ -1,7 +1,13 @@
-test_count= input()
-solve_list= list(test_count)
+test_count= int(input())
+test_set= list(map(int, input().split()))
 
-solve_list.sort(reverse= True)
+test_set2= list(set(test_set))
+test_set3= sorted(test_set2)
 
-for i in solve_list:
-    print(i, end="")
+test_dic = {}
+for i in range(len(test_set3)):
+    test_dic[ test_set3[i] ]= i
+
+for num in test_set:
+    print(test_dic[num], end=' ')
+
