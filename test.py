@@ -1,13 +1,17 @@
-test_count= int(input())
-test_set={}
-test_rank=[]
+N= int(input())
+test_set= list(map(int, input().split()))
 
-for i in range(test_count):
-    weight, height = map(int, input().split())
-    test_set[weight]= height
+count=0
+for i in test_set:
+    sosu= True
+    if i == 1:
+        continue
+    for j in range(2, i):
+        if i % j == 0:
+            sosu= False
+            break
+    if sosu==True:
+        count+=1
 
-for i in test_set.keys():
-    count=1
-    for weight,height in test_set.items():
-        if i < weight and test_set[i] < height:
-            count+=1
+
+print(count)
