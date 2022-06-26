@@ -1,21 +1,13 @@
-candidate, kim, lim = map(int, input().split())
-count=0
-while kim != lim:
-    if kim %2 ==0:
-        if kim//2 !=0:
-            kim//=2
-    else:
-        if kim//2 !=0:
-            kim//=2
-            kim+=1
+test_count= int(input())
+test_set={}
+test_rank=[]
 
-    if lim %2 ==0:
-        if lim//2 !=0:
-            lim//=2
-    else:
-        if lim//2 !=0:
-            lim//=2
-            lim+=1
-    count+=1
+for i in range(test_count):
+    weight, height = map(int, input().split())
+    test_set[weight]= height
 
-print(count)
+for i in test_set.keys():
+    count=1
+    for weight,height in test_set.items():
+        if i < weight and test_set[i] < height:
+            count+=1
