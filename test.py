@@ -1,17 +1,14 @@
-N= int(input())
-test_set= list(map(int, input().split()))
+test_input= input()
+lower_input= test_input.lower()
 
-count=0
-for i in test_set:
-    sosu= True
-    if i == 1:
-        continue
-    for j in range(2, i):
-        if i % j == 0:
-            sosu= False
-            break
-    if sosu==True:
-        count+=1
+count= [0 for i in range(26)]
 
+for x in lower_input:
+    count[ord(x)-97]+=1
 
-print(count)
+sorted_count= sorted(count, reverse=True)
+check_num= count.index(sorted_count[0])
+if sorted_count[0]==sorted_count[1]:
+    print("?")
+else:
+    print(chr(check_num+97).upper())
