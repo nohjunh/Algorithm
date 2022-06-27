@@ -1,11 +1,6 @@
-test_input= list(map(int, input().split()))
+test_list= int(input())
 
-sorted_input= sorted(test_input)
-sorted_input_reverse= sorted(test_input, reverse=True)
-
-if test_input == sorted_input:
-    print("ascending")
-elif test_input == sorted_input_reverse:
-    print("descending")
-else:
-    print("mixed")
+str= "*"
+for i in range(test_list):
+    print(str.rjust(test_list))
+    str+="*"
