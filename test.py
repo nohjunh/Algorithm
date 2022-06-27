@@ -1,16 +1,11 @@
-test_set= list(range(1,10001))
+test_input= list(map(int, input().split()))
 
-del_set= set()
+sorted_input= sorted(test_input)
+sorted_input_reverse= sorted(test_input, reverse=True)
 
-for number in test_set:
-    sum=number
-    for digit in str(number):
-        sum+= int(digit)
-    if(sum<=10000):
-        del_set.add(sum)
-
-for element in del_set:
-    test_set.remove(element)
-
-for step in test_set:
-    print(step)
+if test_input == sorted_input:
+    print("ascending")
+elif test_input == sorted_input_reverse:
+    print("descending")
+else:
+    print("mixed")
