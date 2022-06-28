@@ -1,13 +1,11 @@
-A,B = map(int, input().split())
+test_input= int(input())
+test_list= []
+for i in range(test_input):
+    A,B = map(str, input().split())
+    A= int(A)
+    test_list.append([A,B])
 
-reverse_A= list(str(A))
-reverse_A= reverse_A[::-1]
-reverse_B= list(str(B))
-reverse_B= reverse_B[::-1]
-reverse_A= "".join(reverse_A)
-reverse_B= "".join(reverse_B)
+test_list.sort(key=lambda x:x[0])
 
-if int(reverse_B) > int(reverse_A):
-    print(int(reverse_B))
-else:
-    print(int(reverse_A))
+for i in range(test_input):
+    print(test_list[i][0], test_list[i][1])
