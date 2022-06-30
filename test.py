@@ -1,16 +1,6 @@
-n = int(input())
-count=0
-while True:
-    if n==1 or n==2:
-        count=-1
-        break
-    if n==0:
-        break
-    if n % 5 == 0:
-        n-=5
-        count+=1
-    else:
-        n-=3
-        count+=1
+A, B= map(int, input().split())
+A_set= set(map(int, input().split()))
+B_set= set(map(int, input().split()))
+A_B= A_set^B_set # set집합 대칭차집합 연산
 
-print(count)
+print(len(A_B))
