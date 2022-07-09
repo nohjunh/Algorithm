@@ -1,6 +1,16 @@
-A, B= map(int, input().split())
-A_set= set(map(int, input().split()))
-B_set= set(map(int, input().split()))
-A_B= A_set^B_set # set집합 대칭차집합 연산
+N = int(input())
+A = set(map(int, input().split()))
+M = int(input())
+B = list(map(int, input().split()))
 
-print(len(A_B))
+for i in B:
+    if i in A:
+        print("1")
+    else:
+        print("0")
+ 
+
+
+    
+
+
