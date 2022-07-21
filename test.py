@@ -1,31 +1,32 @@
-#https://leedakyeong.tistory.com/entry/Python-2-dimension-list
-#https://computer-science-student.tistory.com/313
-#파이썬에서 2차원 이상의 배열 생성초기화 시 주의해야할 점.
-
-DP = [[[0]*51 for _ in range(51)]*51 for _ in range(51)] #3차원 배열
-
-def w(a,b,c):
-  if a<=0 or b<=0 or c<=0:
-    return 1
-  if a>20 or b>20 or c>20:
-    if DP[a][b][c]!=0:
-      return DP[a][b][c]
-    return w(20,20,20)
-  if a<b<c:
-    if DP[a][b][c]!=0:
-      return DP[a][b][c]
-    else:
-      DP[a][b][c] = w(a, b, c-1) + w(a, b-1, c-1) - w(a, b-1, c)
-      return DP[a][b][c]
+def solve(x, y, N):
+  # color 0= 흰, 1= 파
+  global paper
+  color = paper[x][y]
+  for i in range(x, x+N):
+    for j in range(y, y+N):
+      if color != paper[i][j]:
+        solve(x, y, N//2)
+        solve(x+N//2, y, N//2)
+        solve(x, y+N//2, N//2)
+        solve(x+N//2, y+N//2, N//2)
+        return
+  if color == 0:
+    global count_0
+    count_0+=1
   else:
-    if DP[a][b][c]!=0:
-      return DP[a][b][c]
-    DP[a][b][c] = w(a-1, b, c) + w(a-1, b-1, c) + w(a-1, b, c-1) - w(a-1, b-1, c-1)
-    return DP[a][b][c]
+    global count_1
+    count_1+=1 
+  
 
+N= int(input())
+global paper
+paper = []
+global count_0, count_1
+count_0=0
+count_1=0
+for _ in range(N):
+  paper.append(list(map(int, input().split())))
 
-while(1):
-  a,b,c= map(int, input().split())
-  if a==-1 and b==-1 and c==-1:
-    break
-  print("w({}, {}, {}) =".format(a,b,c),w(a,b,c))
+solve(0,0,N)
+print(count_0)
+print(count_1)
