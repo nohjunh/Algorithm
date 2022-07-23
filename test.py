@@ -1,15 +1,20 @@
-K, N = map(int, input().split())
-code= [int(input()) for _ in range(K)]
+while(1):
+  num= int(input())
+  num_list = list(str(num))
+  if num==0:
+    break
 
-start=1
-end= max(code)
+  end= len(str(num))
+  if end==1:
+    print("yes")
+  mid= end//2
 
-while start < end:
-  mid= (start+end)//2 +1
-  count= sum([ i//mid for i in code])
-  if count >= N:
-    start= mid
-  else:
-    end= mid-1
-  
-print(start)
+  for i in range(mid):
+    if num_list[i] == num_list[end-1]:
+      end-=1
+      if i+1==mid:
+        print("yes")
+        break
+    else:
+      print("no")
+      break
