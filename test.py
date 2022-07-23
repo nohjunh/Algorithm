@@ -1,14 +1,14 @@
-N= int(input())
+A,B= map(int, input().split())
 
-num= 1
-while(True):
-  sum_value=0
-  sum_value= num + sum(map(int, str(num)))
-  if sum_value == N:
-    print(num)
-    break
-  elif num>=N:
-    print("0")
-    break
-  else:
-    num+=1
+def gcd(x,y):
+  while y!=0:
+    x2=y
+    y= x%y
+    x=x2
+  return x
+
+def lcm(x,y):
+  return x*y // gcd(x,y)
+
+print(gcd(A,B))
+print(lcm(A,B))
