@@ -1,32 +1,24 @@
-def solve(x, y, N):
-  # color 0= 흰, 1= 파
-  global paper
-  color = paper[x][y]
-  for i in range(x, x+N):
-    for j in range(y, y+N):
-      if color != paper[i][j]:
-        solve(x, y, N//2)
-        solve(x+N//2, y, N//2)
-        solve(x, y+N//2, N//2)
-        solve(x+N//2, y+N//2, N//2)
-        return
-  if color == 0:
-    global count_0
-    count_0+=1
-  else:
-    global count_1
-    count_1+=1 
-  
+"""
+n=1 -> 1 1개
+n=2 -> 00, 11 2개
+n=3 -> 100 , 001, 111 3개
+n=4 -> 0000, 0011, 1100, 1001, 1111 5개
+n=5 -> 8개
+
+DP[n]= DP[n-1] + DP[n-2]
+"""
+
+def solve(N):
+  for i in range(3, N+1):
+    DP[i]= (DP[i-1] + DP[i-2]) % 15746
+  return DP[N]
 
 N= int(input())
-global paper
-paper = []
-global count_0, count_1
-count_0=0
-count_1=0
-for _ in range(N):
-  paper.append(list(map(int, input().split())))
-
-solve(0,0,N)
-print(count_0)
-print(count_1)
+DP = [0 for _ in range(N+1)]
+DP[1]=1
+DP[2]=2
+if N==1 or N==2:
+  print(N%15746)
+else:
+  ans = solve(N)
+  print(ans)
