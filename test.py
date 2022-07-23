@@ -1,11 +1,14 @@
 N= int(input())
-dead_num=666
-count=0
-while(1):
-  if '666' in str(dead_num):
-    count+=1
-  if count==N:
-    print(dead_num)
+
+num= 1
+while(True):
+  sum_value=0
+  sum_value= num + sum(map(int, str(num)))
+  if sum_value == N:
+    print(num)
+    break
+  elif num>=N:
+    print("0")
     break
   else:
-    dead_num+=1
+    num+=1
