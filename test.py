@@ -1,20 +1,11 @@
+N= int(input())
+dead_num=666
+count=0
 while(1):
-  num= int(input())
-  num_list = list(str(num))
-  if num==0:
+  if '666' in str(dead_num):
+    count+=1
+  if count==N:
+    print(dead_num)
     break
-
-  end= len(str(num))
-  if end==1:
-    print("yes")
-  mid= end//2
-
-  for i in range(mid):
-    if num_list[i] == num_list[end-1]:
-      end-=1
-      if i+1==mid:
-        print("yes")
-        break
-    else:
-      print("no")
-      break
+  else:
+    dead_num+=1
