@@ -1,11 +1,15 @@
-N= int(input())
-num_list= list(map(int, input().split()))
+K, N = map(int, input().split())
+code= [int(input()) for _ in range(K)]
 
-DP = [1 for _ in range(N)]
+start=1
+end= max(code)
 
-for i in range(N):
-  for j in range(i):
-    if num_list[j] < num_list[i]:
-      DP[i] = max(DP[i], DP[j]+1)
-
-print(max(DP))
+while start < end:
+  mid= (start+end)//2 +1
+  count= sum([ i//mid for i in code])
+  if count >= N:
+    start= mid
+  else:
+    end= mid-1
+  
+print(start)
