@@ -1,14 +1,11 @@
+import math
 import sys
-A,B,C= map(int, sys.stdin.readline().split())
 
-def solve(A,B):
-  if B==1:
-    return A%C
-  temp= solve(A, B//2)
-
-  if B%2==0:
-    return temp*temp % C
-  else:
-    return temp*temp*A % C
-
-print(solve(A,B))
+T= int(sys.stdin.readline())
+for _ in range(T):
+  H, W, N= map(int, sys.stdin.readline().split())
+  floor= N%H ## 층 수
+  count= math.ceil(N/H) ## 몇 번째 호수
+  if floor==0:
+    floor= H
+  print(floor*100+count)
