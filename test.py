@@ -1,20 +1,19 @@
-# 최소힙
-
-import heapq
 import sys
+from collections import deque
 
-heap = []
-count=0
-N= int(sys.stdin.readline())
-for i in range(N):
-  test = int(sys.stdin.readline())
-  if test!=0:
-    count+=1
-    heapq.heappush(heap, test)
-  else:
-    if count==0:
-      print("0")
-    else:
-      print(heapq.heappop(heap))
-      count-=1
+N, K = map(int, sys.stdin.readline().split())
+que= deque()
+ans= []
 
+for i in range(1, N+1):
+  que.append(i)
+
+while(len(que)!=0):
+  for _ in range(K-1):
+    que.append(que[0])
+    que.popleft()
+  ans.append(que.popleft())
+
+print("<", end='')
+print(*ans, sep=', ',end='')
+print(">")
