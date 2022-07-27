@@ -1,28 +1,26 @@
-import math
+# 최대힙
+
+import heapq
 import sys
 
-N, M= map(int, sys.stdin.readline().split())
-A_list= []
+heap = []
+list = []
+count=0
+N= int(sys.stdin.readline())
 for i in range(N):
-  A_list.append(list(map(int, sys.stdin.readline().split())))
+  test = int(sys.stdin.readline())
+  if test!=0:
+    list.append(test)
+    count+=1
+    for value in list:
+      # 여기서 - 붙여서 heappush 해주는게 최대힙에서 중요!
+      heapq.heappush(heap, -test)
+    list.clear()
+  else:
+    if count==0:
+      print("0")
+    else:
+      # 여기서 -로 push해줬으니까 - 붙여서 pop 판단근거 만들기 중요!
+      print(-heapq.heappop(heap))
+      count-=1
 
-N, M= map(int, sys.stdin.readline().split())
-B_list= []
-for i in range(N):
-  B_list.append(list(map(int, sys.stdin.readline().split())))
-
-All_list= []
-
-for i in range(len(A_list)):
-  for j in range(M):
-    test=0
-    for k in range(len(A_list[i])):
-      test+= A_list[i][k]*B_list[k][j]
-    All_list.append(test)
-
-def list_chuck(arr, n):
-    return [arr[i: i + n] for i in range(0, len(arr), n)]
-
-list_chunked= list_chuck(All_list, 3)
-for i in list_chunked:
-  print(*i)
