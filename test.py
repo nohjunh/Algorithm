@@ -1,4 +1,4 @@
-# min heap
+# max heap
 
 import heapq
 # 내림차순 힙 정렬(Heap Sort)
