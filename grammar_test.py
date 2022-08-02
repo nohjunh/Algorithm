@@ -1,16 +1,14 @@
-import heapq
 
-graph= {
-    'A': 10000
-}
+graph= [ [] for _ in range(5+1)]
+a,b,c= map(int, input().split())
 
-graph['A']=20
-heap= []
+graph[a].append( (b,c) )
 
-# 요소 첫번째 두번째는 pop할때 따로따로 받을 수 있다.
-# 다음과 같이,
+print(graph[a])
+for i in graph[a]:
+    print(i[0])
 
-heapq.heappush(heap, [graph['A'], 'STart'])
-
-first, second = heapq.heappop(heap)
-print(first, second)
+import sys
+INF=sys.maxsize
+distance = [INF] * (5+1) # 먼저, start로부터의 각 노드별 최단 거리를 INF로 초기화
+print(distance)
