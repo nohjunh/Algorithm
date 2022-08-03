@@ -5,9 +5,11 @@ input= sys.stdin.readline
 # 무한을 의미하는 값
 INF= sys.maxsize
 
-# N=숫자로 구분된 각각의 마을, M=단방향 도로, X=파티를 벌이는 마을
-N,M,X = map(int, input().split())
+# N=정점의 개수, E=간선의 개수 입력받기
+N,E = map(int, input().split())
 
+# 시작 정점의 번호가 주어짐
+start= 1
 
 # 각 정점에서 다른 정점로의 연결되어 있는 정보를 담는 리스트 만들기
 graph= [ [] for _ in range(N+1)]
@@ -16,14 +18,19 @@ graph= [ [] for _ in range(N+1)]
 distance = [INF] * (N+1) # 먼저, start로부터의 각 정점별 최단 거리를 INF로 초기화
 
 # 모든 간선 정보 입력받기
-for _ in range(M): # 간선의 개수 m개
+for _ in range(E): # 간선의 개수 m개
   a, b, c = map(int, input().split())
   # a정점에서 b정점으로 가는 가중치 c인 간선이라는 의미
-  graph[a].append( (b,c) )
 
+  #양방향 이동이 가능하므로 다음과 같이 구성
+  graph[a].append( (b,c) )
+  graph[b].append( (a,c) )
+
+# 반드시 거쳐야 하는 정점 입력받기
+v1, v2 = map(int, input().split())
 
 def dijkstra(start, end):
-  distance = [INF] * (N+1) # 먼저, start로부터의 각 정점별 최단 거리를 0로 초기화
+  distance = [INF] * (N+1) # 먼저, start로부터의 각 정점별 최단 거리를 INF로 초기화
   q = []
   # 출발정점으로 가기 위한 최단 비용은 0이고, 먼저 큐에 삽입
   heapq.heappush(q, (0, start)) # 두번째 요소의 첫번째=비용, 두번째= 도착정점
@@ -51,17 +58,11 @@ def dijkstra(start, end):
         heapq.heappush(q, (cost, i[0]))
   return distance[end]
 
-ans1_list=[]
-ans2_list=[]
-ans3_list=[]
 # 다익스트라 알고리즘을 수행
-for j in range(1, N+1):
-  ans1_list.append(dijkstra(j, X))
+ans1= dijkstra(start, v1) + dijkstra(v1, v2) + dijkstra(v2, N)
+ans2= dijkstra(start, v2) + dijkstra(v2, v1) + dijkstra(v1, N)
 
-for j in range(1, N+1):
-  ans2_list.append(dijkstra(X, j))
-
-for i in range(N):
-  ans3_list.append(ans1_list[i]+ans2_list[i])
-
-print(max(ans3_list))
+if ans1>=INF and ans2>=INF:
+  print(-1)
+else:
+  print( min(ans1, ans2))
