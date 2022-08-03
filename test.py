@@ -2,27 +2,28 @@ import heapq
 import sys
 input= sys.stdin.readline
 
-INF= sys.maxsize # 무한을 의미하는 값
+# 무한을 의미하는 값
+INF= sys.maxsize
 
-# V=정점의 개수, E=간선의 개수 입력받기
-V,E = map(int, input().split())
+# N=숫자로 구분된 각각의 마을, M=단방향 도로, X=파티를 벌이는 마을
+N,M,X = map(int, input().split())
 
-# 시작 정점의 번호가 주어짐
-start= int(input())
 
 # 각 정점에서 다른 정점로의 연결되어 있는 정보를 담는 리스트 만들기
-graph= [ [] for _ in range(V+1)]
+graph= [ [] for _ in range(N+1)]
 
 # 최단 경로 테이블을 모두 무한으로 초기화
-distance = [INF] * (V+1) # 먼저, start로부터의 각 정점별 최단 거리를 INF로 초기화
+distance = [INF] * (N+1) # 먼저, start로부터의 각 정점별 최단 거리를 INF로 초기화
 
 # 모든 간선 정보 입력받기
-for _ in range(E): # 간선의 개수 m개
-  u, v, w = map(int, input().split())
-  # u정점에서 v정점으로 가는 가중치 w인 간선이라는 의미
-  graph[u].append( (v,w) )
+for _ in range(M): # 간선의 개수 m개
+  a, b, c = map(int, input().split())
+  # a정점에서 b정점으로 가는 가중치 c인 간선이라는 의미
+  graph[a].append( (b,c) )
 
-def dijkstra(start):
+
+def dijkstra(start, end):
+  distance = [INF] * (N+1) # 먼저, start로부터의 각 정점별 최단 거리를 0로 초기화
   q = []
   # 출발정점으로 가기 위한 최단 비용은 0이고, 먼저 큐에 삽입
   heapq.heappush(q, (0, start)) # 두번째 요소의 첫번째=비용, 두번째= 도착정점
@@ -48,12 +49,19 @@ def dijkstra(start):
         distance[i[0]] = cost
         # 값이 갱신될 때마다 힙에 넣어줌.
         heapq.heappush(q, (cost, i[0]))
-      
-# 다익스트라 알고리즘을 수행
-dijkstra(start)
+  return distance[end]
 
-for i in range(1, len(distance)):
-  if distance[i]==INF:
-    print("INF")
-  else:
-    print(distance[i])
+ans1_list=[]
+ans2_list=[]
+ans3_list=[]
+# 다익스트라 알고리즘을 수행
+for j in range(1, N+1):
+  ans1_list.append(dijkstra(j, X))
+
+for j in range(1, N+1):
+  ans2_list.append(dijkstra(X, j))
+
+for i in range(N):
+  ans3_list.append(ans1_list[i]+ans2_list[i])
+
+print(max(ans3_list))
