@@ -1,35 +1,10 @@
+### 10282
+
 import heapq
 import sys
 input= sys.stdin.readline
 
-# 무한을 의미하는 값
-INF= sys.maxsize
-
-# N=정점의 개수, E=간선의 개수 입력받기
-N,E = map(int, input().split())
-
-# 시작 정점의 번호가 주어짐
-start= 1
-
-# 각 정점에서 다른 정점로의 연결되어 있는 정보를 담는 리스트 만들기
-graph= [ [] for _ in range(N+1)]
-
-# 최단 경로 테이블을 모두 무한으로 초기화
-distance = [INF] * (N+1) # 먼저, start로부터의 각 정점별 최단 거리를 INF로 초기화
-
-# 모든 간선 정보 입력받기
-for _ in range(E): # 간선의 개수 m개
-  a, b, c = map(int, input().split())
-  # a정점에서 b정점으로 가는 가중치 c인 간선이라는 의미
-
-  #양방향 이동이 가능하므로 다음과 같이 구성
-  graph[a].append( (b,c) )
-  graph[b].append( (a,c) )
-
-# 반드시 거쳐야 하는 정점 입력받기
-v1, v2 = map(int, input().split())
-
-def dijkstra(start, end):
+def dijkstra(start):
   distance = [INF] * (N+1) # 먼저, start로부터의 각 정점별 최단 거리를 INF로 초기화
   q = []
   # 출발정점으로 가기 위한 최단 비용은 0이고, 먼저 큐에 삽입
@@ -56,13 +31,35 @@ def dijkstra(start, end):
         distance[i[0]] = cost
         # 값이 갱신될 때마다 힙에 넣어줌.
         heapq.heappush(q, (cost, i[0]))
-  return distance[end]
+  return distance
 
-# 다익스트라 알고리즘을 수행
-ans1= dijkstra(start, v1) + dijkstra(v1, v2) + dijkstra(v2, N)
-ans2= dijkstra(start, v2) + dijkstra(v2, v1) + dijkstra(v1, N)
+# 무한을 의미하는 값
+INF= sys.maxsize
 
-if ans1>=INF and ans2>=INF:
-  print(-1)
-else:
-  print( min(ans1, ans2))
+# 테스트 케이스의 개수 
+T= int(input())
+
+for _ in range(T):
+  # N=컴퓨터의 갯수, D=의존성의 갯수, C= 해킹당한 컴퓨터의 번호
+  N,D,C = map(int, input().split())
+
+  # 각 정점에서 다른 정점로의 연결되어 있는 정보를 담는 리스트 만들기
+  graph= [ [] for _ in range(N+1)]
+
+  # 최단 경로 테이블을 모두 무한으로 초기화
+  distance = [INF] * (N+1) # 먼저, start로부터의 각 정점별 최단 거리를 INF로 초기화
+
+  # 모든 간선 정보 입력받기
+  for _ in range(D): # 간선의 개수 m개
+    a, b, s = map(int, input().split())
+    graph[b].append( (a,s) )
+
+  # 다익스트라 알고리즘을 수행
+  distance= dijkstra(C)
+  max_distance=0
+  count=0
+  for i in distance:
+    if i != INF:
+      count+=1
+      max_distance = max(i, max_distance)
+  print(count, max_distance)
