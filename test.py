@@ -1,14 +1,16 @@
-#14425
+from collections import deque
+import queue
 import sys
-input= sys.stdin.readline
+input = sys.stdin.readline
 
-N,M= map(int, input().split())
-s_set= set(input() for _ in range(N))
+N=int(input())
+que= deque()
 
-count= 0
-for i in range(M):
-    test=input()
-    if test in s_set:
-        count+=1
+for i in range(1, N+1):
+    que.append(i)
 
-print(count)
+while(len(que)!=1):
+    que.popleft()
+    que.append(que.popleft())
+
+print(que[0])
