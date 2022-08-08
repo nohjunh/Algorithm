@@ -1,5 +1,4 @@
-# BFS TEST
-from re import A
+# DFS TEST
 import sys
 from collections import deque
 input= sys.stdin.readline
@@ -14,16 +13,13 @@ graph_list = {1: set([2, 3]),
 }
 
 root_node = 1
-
-def BFS_with_adj_list(graph_list, root):
-    visited = []
-    queue= deque([root])
-    while queue:
-        n = queue.popleft()
-        if n not in visited:
-            visited.append(n)
-            queue+=graph_list[n]-set(visited)
+visited = []
+def DFS_with_adj_list(graph_list, root):
+    visited.append(root)
+    for node in graph_list[root]:
+        if node not in visited:
+            DFS_with_adj_list(graph_list, node)
     return visited
 
-print(BFS_with_adj_list(graph_list, root_node))
+print(DFS_with_adj_list(graph_list, root_node))
         
