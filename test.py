@@ -6,7 +6,6 @@ input= sys.stdin.readline
 # N=정점의 개수, M=간선의 개수, V= 탐색할 정점의 번호
 N, M, V = map(int, input().split())
 graph_test = [[] for _ in range(N+1)]
-graph_list = dict()
 
 # 양방향 연결
 for i in range(M):
@@ -16,41 +15,33 @@ for i in range(M):
 
 for i in range(len(graph_test)):
     graph_test[i].sort()
-    
-for i in range(1,N+1):
-    if len(graph_test[i])==0:
-        graph_list[i]=None
-    else:
-        graph_list[i]=set(graph_test[i])
         
-def DFS_with_adj_list(graph_list, root):
-    visited.append(root)
-    if graph_list[root]==None:
+def DFS_with_adj_list(graph_test, root):
+    visited.add(root)
+    print(root, end=' ')
+    if graph_test[root]==None:
         return
-    for node in graph_list[root]:
+    for node in graph_test[root]:
         if node not in visited:
-            DFS_with_adj_list(graph_list, node)
+            DFS_with_adj_list(graph_test, node)
     return visited
 
-def BFS_with_adj_list(graph_list, root):
+def BFS_with_adj_list(graph_test, root):
     queue= deque([root])
+    visited.add(root)
     while queue:
         n = queue.popleft()
-        if n not in visited:
-            visited.append(n)
-            if graph_list[n]==None:
-                continue
-            queue+=graph_list[n]-set(visited)
+        print(n, end=' ')
+        for neigh in graph_test[n]:
+            if neigh not in visited:
+                visited.add(neigh)
+                queue.append(neigh)
     return visited
 
-visited = []
-DFS_with_adj_list(graph_list, V)
-for i in visited:
-    print(i, end=' ')
+visited = set()
+DFS_with_adj_list(graph_test, V)
 
 print()
 
-visited = []
-BFS_with_adj_list(graph_list, V)
-for i in visited:
-    print(i, end=' ')
+visited = set()
+BFS_with_adj_list(graph_test, V)
