@@ -1,7 +1,7 @@
-#24480
-from lib2to3.refactor import get_fixers_from_package
+# 24444
 import sys
 input=sys.stdin.readline
+from collections import deque
 sys.setrecursionlimit(100000)
 
 # N개의 정점, M개의 간선, R=시작정점
@@ -16,21 +16,25 @@ for i in range(M):
     graph_list[node2].append(node1)
 
 for i in range(1, N+1):
-    graph_list[i].sort(reverse=True)
+    graph_list[i].sort()
 
 visited=[0 for _ in range(N+1)]
 
 count=1
-def DFS_adj_list(graph_list, root):
+def BFS_adj_list(graph_list, root):
     global count
+    queue= deque([root])
     visited[root]=count
-    for node in graph_list[root]:
-        if visited[node]==0:
-            count+=1
-            DFS_adj_list(graph_list, node)
+    while queue:
+        n= queue.popleft()
+        for neigh in graph_list[n]:
+            if visited[neigh]== 0: # 여기서 vistied[neigh]==0 이라면 방문 안했다는거니까 방문해줘야 함.
+                count+=1
+                visited[neigh]=count
+                queue.append(neigh)
     return visited
 
-DFS_adj_list(graph_list, R)
+BFS_adj_list(graph_list, R)
 
 for i in range(1, N+1):
     print(visited[i])
