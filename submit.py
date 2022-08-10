@@ -1,11 +1,14 @@
-# 24445
+# 2606
 import sys
 input=sys.stdin.readline
 from collections import deque
 sys.setrecursionlimit(100000)
 
-# N개의 정점, M개의 간선, R=시작정점
-N, M, R= map(int, input().split())
+# N= 컴퓨터의 수 
+# M= 컴퓨터 쌍의 수(간선)
+# R= 시작 컴퓨터는 1
+N=int(input())
+M=int(input())
 
 graph_list = [[] for _ in range(N+1)]
 
@@ -15,26 +18,20 @@ for i in range(M):
     graph_list[node1].append(node2)
     graph_list[node2].append(node1)
 
-for i in range(1, N+1):
-    graph_list[i].sort(reverse= True)
-
-visited=[0 for _ in range(N+1)]
-
-count=1
+visited= set()
+count=0 #1번이 걸린거는 제외하고 생각! -> 1번에 의해 걸린 컴퓨터의 수를 세면 됨.
 def BFS_adj_list(graph_list, root):
     global count
     queue= deque([root])
-    visited[root]=count
+    visited.add(root)
     while queue:
         n= queue.popleft()
         for neigh in graph_list[n]:
-            if visited[neigh]== 0: # 여기서 vistied[neigh]==0 이라면 방문 안했다는거니까 방문해줘야 함.
+            if neigh not in visited: # 여기서 vistied[neigh]==0 이라면 방문 안했다는거니까 방문해줘야 함.
                 count+=1
-                visited[neigh]=count
+                visited.add(neigh)
                 queue.append(neigh)
     return visited
 
-BFS_adj_list(graph_list, R)
-
-for i in range(1, N+1):
-    print(visited[i])
+BFS_adj_list(graph_list, 1)
+print(count)
