@@ -1,4 +1,4 @@
-# 24444
+# 24445
 import sys
 input=sys.stdin.readline
 from collections import deque
@@ -16,7 +16,7 @@ for i in range(M):
     graph_list[node2].append(node1)
 
 for i in range(1, N+1):
-    graph_list[i].sort()
+    graph_list[i].sort(reverse= True)
 
 visited=[0 for _ in range(N+1)]
 
