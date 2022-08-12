@@ -1,34 +1,41 @@
-# 14226
+# Floyd-Warshall 알고리즘 test
+from lib2to3.refactor import get_fixers_from_package
 import sys
-input=sys.stdin.readline
-from collections import deque
+input= sys.stdin.readline
+INF= int(1e9) # 무한
 
-# 스마일 이모티콘 S개
-S= int(input())
-# ex) 1>저장>붙여넣기 -> 2 >저장> 붙여넣기 -> 4 
-# (ㅁ,ㅁ) => 현재 화면에 있는 이모티콘 갯수, 클립보드에 저장된 이모티콘
-visited= {}
-visited[(1,0)]=0 #이미 화면에 이모티콘 1개가 입력된 상황
+# N= 노드의 갯수,  M= 간선의 갯수
+N= int(input())
+M= int(input())
+# 2차원 배열->그래프 만들고 모든 값을 무한으로 초기화
+graph_matrix=[[INF]*(N+1) for _ in range(N+1)] # 0번 인덱스는 사용하지 않음
 
-def BFS_adj_list(visited):
-    queue= deque([(1,0)]) 
-    while queue:
-        current_emoti, clipboard= queue.popleft()
+# 자기 자신에서 자기 자신으로 가는 비용은 0으로 초기화
+for i in range(1, N+1):
+    for j in range(1, N+1):
+        if i==j:
+            graph_matrix[i][j]=0
 
-        if current_emoti==S: # 현재 이모티콘 갯수가 S개 일때 
-            return visited[(current_emoti, clipboard)]
+# 각 간선에 대한 정보를 입력 받아, 그 값으로 초기화
+for _ in range(M):
+    # A에서 B로 가는 비용은 C라고 설정
+    a,b,c = map(int, input().split())
+    graph_matrix[a][b]=c
 
-        # 1. 화면에 있는 이모티콘을 모두 복사해서 클립보드에 저장한다.
-        if (current_emoti, current_emoti) not in visited.keys(): 
-            visited[(current_emoti,current_emoti)]= visited[(current_emoti,clipboard)]+1
-            queue.append((current_emoti,current_emoti))
-        # 2. 클립보드에 있는 모든 이모티콘을 화면에 붙여넣기 한다
-        if (current_emoti+clipboard, clipboard) not in visited.keys():
-            visited[(current_emoti+clipboard, clipboard)]= visited[(current_emoti,clipboard)]+1
-            queue.append((current_emoti+clipboard,clipboard))
-        # 3. 화면에 있는 이모티콘 중 하나를 삭제한다.
-        if (current_emoti-1, clipboard) not in visited.keys():
-            visited[(current_emoti-1, clipboard)]= visited[(current_emoti,clipboard)]+1
-            queue.append((current_emoti-1,clipboard))
+# 점화식에 따라 플로이드 와샬 알고리즘 수행
+for k in range(1, N+1): # 거쳐가는 정점
+    for i in range(1, N+1): # 시작 정점
+        for j in range(1, N+1): # 도착 정점
+            # i에서 j로 바로 가는 것보다 i에서 k + k에서 j로 가는 값 중 더 작은 값을 i에서 j로 가는 경로의 값으로 설정
+            graph_matrix[i][j]= min(graph_matrix[i][j], graph_matrix[i][k]+graph_matrix[k][j])
 
-print(BFS_adj_list(visited))
+# 수행 결과 출력
+for i in range(1, N+1):
+    for j in range(1, N+1):
+        # 도달할 수 없는 것들은 INF로 출력
+        if graph_matrix[i][j]==INF:
+            print("INF", end=' ')
+        else:
+            print(graph_matrix[i][j], end=' ')
+
+print()
