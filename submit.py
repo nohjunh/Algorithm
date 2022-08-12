@@ -1,48 +1,34 @@
-# 16928
-from shutil import move
+# 14226
 import sys
 input=sys.stdin.readline
 from collections import deque
 
-# 보드판은 1~100까지의 수가 하나씩 적혀있는 10X10
-board=[0]*101
+# 스마일 이모티콘 S개
+S= int(input())
+# ex) 1>저장>붙여넣기 -> 2 >저장> 붙여넣기 -> 4 
+# (ㅁ,ㅁ) => 현재 화면에 있는 이모티콘 갯수, 클립보드에 저장된 이모티콘
+visited= {}
+visited[(1,0)]=0 #이미 화면에 이모티콘 1개가 입력된 상황
 
-# N=사다리의 수, M= 뱀의 수
-N, M= map(int, input().split())
-
-# 사다리와 뱀은 해당 좌표에 도착할 시 위치가 미리 저장된 곳으로 워프해야되므로
-# 좌표 값을 쌍으로 저장하고 있어야 된다. -> 딕셔너리 이용
-ladder= {}
-snake= {}
-for _ in range(N):
-    a, b =map(int,input().split())
-    ladder[a]=b
-for _ in range(M):
-    a, b= map(int, input().split())
-    snake[a]=b
-
-visited=[0 for _ in range(101)]
-
-def BFS_adj_list(board):
-    # 1번부터 시작 (문제조건)
-    queue= deque([1])
+def BFS_adj_list(visited):
+    queue= deque([(1,0)]) 
     while queue:
-        position = queue.popleft()
-        if position==100: # 100번째 칸에 도착 -> 주사위를 몇 번 굴러야하는지 출력
-            return board[100]
-        # 주사위 값 1~6
-        for value in range(1,7):
-            move_value= position+value
-            if 1<=move_value<=100 and visited[move_value]==0:
-                # ladder딕셔너리의 key값들 중에 move_value가 있다면
-                if move_value in ladder.keys():
-                    move_value= ladder[move_value]
-                # snake딕셔너리의 key값들 중에 move_value가 있다면
-                if move_value in snake.keys():
-                    move_value= snake[move_value]
-                if visited[move_value]==0:
-                    visited[move_value]= 1
-                    board[move_value]= board[position]+1
-                    queue.append(move_value)
+        current_emoti, clipboard= queue.popleft()
 
-print(BFS_adj_list(board))
+        if current_emoti==S: # 현재 이모티콘 갯수가 S개 일때 
+            return visited[(current_emoti, clipboard)]
+
+        # 1. 화면에 있는 이모티콘을 모두 복사해서 클립보드에 저장한다.
+        if (current_emoti, current_emoti) not in visited.keys(): 
+            visited[(current_emoti,current_emoti)]= visited[(current_emoti,clipboard)]+1
+            queue.append((current_emoti,current_emoti))
+        # 2. 클립보드에 있는 모든 이모티콘을 화면에 붙여넣기 한다
+        if (current_emoti+clipboard, clipboard) not in visited.keys():
+            visited[(current_emoti+clipboard, clipboard)]= visited[(current_emoti,clipboard)]+1
+            queue.append((current_emoti+clipboard,clipboard))
+        # 3. 화면에 있는 이모티콘 중 하나를 삭제한다.
+        if (current_emoti-1, clipboard) not in visited.keys():
+            visited[(current_emoti-1, clipboard)]= visited[(current_emoti,clipboard)]+1
+            queue.append((current_emoti-1,clipboard))
+
+print(BFS_adj_list(visited))
