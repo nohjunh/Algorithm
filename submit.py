@@ -1,52 +1,37 @@
-# 7562
+# 1697
 import sys
 input=sys.stdin.readline
 from collections import deque
 
-def BFS_adj_list(graph_matrix, x, y):
-    queue= deque() # 큐 선언
-    queue.append( (x,y) )
+# N= 수빈이의 현재 위치
+# K= 동생의 현재 위치
+N, K = map(int, input().split())
+
+max_value= 100000
+graph_matrix=[0 for _ in range(max_value+1)]
+graph_matrix[N]= 1 # 수빈이의 현재 위치 check
+ans_list=[]
+
+def BFS_adj_list(graph_matrix, N):
+    queue = deque()
+    queue.append( N )
     while queue:
-        x, y= queue.popleft()
-        # 8방향을 검사 ....
-        if x==x_final and y==y_final:
-            print(graph_matrix[x][y])
-            return
-        if (0<= x+2 < I) and (I> y+1 >=0) and (graph_matrix[x+2][y+1]==0):
-            graph_matrix[x+2][y+1]= graph_matrix[x][y]+1 
-            queue.append( (x+2, y+1) )
-        if (0<= x+1 < I) and ( I > y+2 >=0 )and (graph_matrix[x+1][y+2]==0):
-            graph_matrix[x+1][y+2]= graph_matrix[x][y]+1 
-            queue.append( (x+1, y+2) )
-        if I> x-2 >= 0 and 0<= y+1 < I and (graph_matrix[x-2][y+1]==0):
-            graph_matrix[x-2][y+1]= graph_matrix[x][y]+1 
-            queue.append( (x-2, y+1) )
-        if I> x-1 >= 0 and 0<= y+2 < I and (graph_matrix[x-1][y+2]==0):
-            graph_matrix[x-1][y+2]= graph_matrix[x][y]+1 
-            queue.append( (x-1, y+2) )
-        if I> x-2 >= 0 and I> y-1 >= 0 and (graph_matrix[x-2][y-1]==0):
-            graph_matrix[x-2][y-1]= graph_matrix[x][y]+1 
-            queue.append( (x-2, y-1) )
-        if I> x-1 >= 0 and I> y-2 >= 0 and (graph_matrix[x-1][y-2]==0):
-            graph_matrix[x-1][y-2]= graph_matrix[x][y]+1 
-            queue.append( (x-1, y-2) )
-        if 0<= x+2 < I and I> y-1 >= 0 and (graph_matrix[x+2][y-1]==0):
-            graph_matrix[x+2][y-1]= graph_matrix[x][y]+1 
-            queue.append( (x+2, y-1) )
-        if 0<= x+1 < I and I> y-2 >= 0 and (graph_matrix[x+1][y-2]==0):
-            graph_matrix[x+1][y-2]= graph_matrix[x][y]+1 
-            queue.append( (x+1, y-2) )    
+        N = queue.popleft()
 
-# T= 테스트 케이스의 개수
-# I= 체스판의 한 변의 길이 -> 체스판의 크기는 2I
-T=int(input())
-for _ in range(T):
-    I=int(input().rstrip())
-    # 나이트가 현재 있는 곳
-    x_current, y_current= map(int, input().split())
-    # 나이트가 이동하려고 하는 칸의 정보
-    x_final, y_final= map(int, input().split())
+        # 방향을 검사
+        if N==K: #수빈이가 동생 위치로 갔다면
+            global ans_list
+            ans_list.append(graph_matrix[N])
+        
+        if (0<= N+1 <= max_value) and (graph_matrix[N+1]==0):
+            graph_matrix[N+1]= graph_matrix[N]+1
+            queue.append( N+1 )
+        if (0<= N-1 <= max_value) and (graph_matrix[N-1]==0):
+            graph_matrix[N-1]= graph_matrix[N]+1 
+            queue.append( N-1 )
+        if (0<= 2*N <= max_value) and (graph_matrix[2*N]==0):
+            graph_matrix[2*N]= graph_matrix[N]+1 
+            queue.append( 2*N )
 
-    # I x I 크기 체스판 
-    graph_matrix=[[0]*(I)for _ in range(I)]
-    BFS_adj_list(graph_matrix, x_current, y_current)
+BFS_adj_list(graph_matrix, N)
+print(min(ans_list)-1)
