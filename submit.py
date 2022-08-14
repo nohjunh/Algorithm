@@ -1,54 +1,37 @@
-# 10159 저울
+# 1956 운동
 import sys
 input= sys.stdin.readline
 INF= int(1e9) # 무한
 
-# N= 물건의 갯수,  M= 미리 측정된 물건 쌍의 개수
-N= int(input())
-M= int(input())
+# V= 마을의 개수 , E= 도로의 갯수
+# 도로는 일방 통행 -> 단방향
+V,E= map(int, input().split())
 
-# 2차원 배열->그래프 만들고 모든 값을 INF으로 초기화
-graph_matrix=[[INF]*(N) for _ in range(N)] # 0번 인덱스는 사용하지 않음
+# 2차원 배열->그래프 만들고 모든 값을 무한으로 초기화
+graph_matrix=[[INF]*(V+1) for _ in range(V+1)] # 0번 인덱스는 사용하지 않음
 
-# 자기 자신은 비교 못하므로 INF로 그대로 나둠
-for i in range(N):
-    for j in range(N):
-        if i==j:
-            graph_matrix[i][j]=INF
-
-# 각 물건에 대한 정보를 입력 받아, 그 값으로 초기화
-for _ in range(M):
-    # a,b => a->b 즉, a는 b보다 무겁다.
-    a,b= map(int, input().split())
-    graph_matrix[a-1][b-1]= 1 # 1로 셋팅된 값은 무게 비교가 가능하다는 것  
+# 각 도로에 대한 정보를 입력 받아, 그 값으로 초기화
+for _ in range(E):
+    # A에서 B로 가는 비용은 C라고 설정
+    a,b,c = map(int, input().split())
+    graph_matrix[a][b]=c
 
 # 점화식에 따라 플로이드 와샬 알고리즘 수행
-for k in range(N): # 거쳐가는 물건
-    for i in range(N): # 시작 물건
-        for j in range(N): # 도착 물건
-            if graph_matrix[i][k]!=INF and graph_matrix[k][j]!=INF:
-                graph_matrix[i][j]= 1
+for k in range(1, V+1): # 거쳐가는 마을
+    for i in range(1, V+1): # 시작 마을
+        for j in range(1, V+1): # 도착 마을
+            # i에서 j로 바로 가는 것보다 i에서 k + k에서 j로 가는 값 중 더 작은 값을 i에서 j로 가는 경로의 값으로 설정
+            graph_matrix[i][j]= min(graph_matrix[i][j], graph_matrix[i][k]+graph_matrix[k][j])
 
-ans_matrix=[[INF]*(N) for _ in range(N)]
+ans=INF
+# 수행 결과 출력
+# graph_matrix[i][i] => 사이클이므로 i에서 i까지의 비용값을 비교하면 됨.
+for i in range(V):
+    if ans > graph_matrix[i][i]:
+        ans=graph_matrix[i][i]
 
-
-for i in range(N):
-    for j in range(N):
-        if i==j:
-            # 구현의 정확성을 위해 자기 자신은 비교 가능하다고 check
-            ans_matrix[i][j]=1
-        if graph_matrix[i][j]== 1:
-            # i가 j랑 비교가 가능하다는 것은 j랑 i도 비교가 가능
-            ans_matrix[i][j]=1
-            ans_matrix[j][i]=1
-
-for i in range(N):
-    count=0
-    for j in range(N):
-        if i==j:
-            #자기 자신은 제외
-            continue
-        # 물건 i와 비교 결과를 알 수 없는 물건의 개수를 출력하기 위한 조건문 
-        if ans_matrix[i][j]==INF:
-            count+=1
-    print(count)
+if ans==INF:
+    # 운동 경로를 찾지 못하는 경우
+    print("-1")
+else:
+    print(ans)
