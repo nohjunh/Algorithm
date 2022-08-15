@@ -1,6 +1,11 @@
-graph_matrix= []
-# 토마토 정보 받아오기
-for i in range(1):
-    N_list= input().rstrip()
-    for j in range(len(N_list)):
-        graph_matrix[i].append(int(N_list[j]))
+import sys
+import heapq
+
+N= int(input())
+heap=[]
+
+for _ in range(2):
+    x= int(input().rstrip())
+    if x!=0:
+        # 힙에 넣을 때 절댓값과 기존 값을 묶어서 넣는다.
+        heapq.heappush(heap, (abs(x), x))
