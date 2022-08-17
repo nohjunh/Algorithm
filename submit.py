@@ -1,70 +1,55 @@
-# 14502 연구소
+# 2583 영역 구하기
 import sys
 from collections import deque
-import copy
 input= sys.stdin.readline
-# N= 연구소의 세로 크기
-# M= 연구소의 가로 크기
-N, M= map(int, input().split())
-graph_matirx = [list(map(int, input().split())) for _ in range(N)]
+# M= 모눈종이의 세로 크기
+# N= 모눈종이의 가로 크기
+# K= 모눈종이 위에 K개의 직사각형
+M,N,K= map(int, input().split())
+graph_matrix = [[0]*(N) for _ in range(M)]
 
-# 4방향 탐색
-dx= [0, 0, 1, -1]
-dy= [1, -1, 0, 0]
+# 4방향검사
+dx=[0,0,1,-1]
+dy=[1,-1,0,0]
 
-def BFS_adj_list():
+# ex) (0,2), (4,4)
+# ex) 4-0, 4-2 = 4(가로길이), 2(세로길이)
+for _ in range(K):
+  left_x, left_y, right_x, right_y= map(int, input().split())
+  for i in range(left_y, right_y): #세로길이 범위
+    for j in range(left_x, right_x): #가로길이 범위
+      graph_matrix[(M-1)-i][j]=1
+
+
+def BFS_adj_list(graph_matrix, first_x, first_y):
     queue= deque()
-    # matrix 복사
-    wall_graph_matrix= copy.deepcopy(graph_matirx)
-    for i in range(N):
-        for j in range(M):
-            if wall_graph_matrix[i][j]==2:
-                queue.append( (i,j) )
+    queue.append((first_x,first_y))
+    graph_matrix[first_x][first_y]=1 #방문 체크
+    count=1 # 위에서 방문체크 먼저 해줬으므로 1부터 시작.
     while queue:
         x,y = queue.popleft()
         # 4방향 검사
         for i in range(4):
             nx= x+dx[i]
             ny= y+dy[i]
-            # 연구소 지도 크기 범위 검사
-            # nx가 2차원 배열에 1요소이므로 세로크기를 나타냄
-            # [nx][ny] => [세로][가로] => N=세로, M=가로
-            if 0<= nx < N and 0<= ny< M:
-                if wall_graph_matrix[nx][ny]==0:
-                    wall_graph_matrix[nx][ny]=2
+            if 0<= nx < M and 0<= ny< N:
+                if graph_matrix[nx][ny]==0:
+                    graph_matrix[nx][ny]=1 #방문체크
+                    count+=1
                     queue.append((nx,ny))
-    zero_count=0
-    for i in range(N):
-        for j in range(M):
-            if wall_graph_matrix[i][j]==0:
-                zero_count+=1
-    ans_list.append(zero_count)
+    return count
 
+splitAreaCount=0
+splitAreaCount_list=[]
 
-def wall(wall_count):
-    # 재귀를 통해 빈 공간을 탐색하는 것은
-    # 직접 패드로 인덱스 따라 그려보며 판단하기.
-    if wall_count==3:
-        BFS_adj_list()
-        return
-    else:
-        for i in range(N):
-            for j in range(M):
-               if graph_matirx[i][j]==0:
-                    # 길에 벽을 만듬
-                    graph_matirx[i][j]=1
-                    # wall_count는 재귀별로 고정일 것임.
-                    # 첫번 째 재귀에서는 count=1이고
-                    # 두번 째 재귀에서는 count=2
-                    # 세번 째 재귀에서는 count=3
-                    # 세번 째 재귀가 끝나면 count=2가 되니 
-                    # 두번 째 벽의 값을 바꾸고 다시 세번 째 재귀문 호출
-                    # 반복
-                    wall(wall_count+1)
-                    graph_matirx[i][j]=0
-                    
+for i in range(M):
+  for j in range(N):
+    if graph_matrix[i][j]==0:
+      splitAreaCount+=1
+      splitAreaCount_list.append(BFS_adj_list(graph_matrix, i, j))
 
-    
-ans_list=[]
-wall(0)
-print(max(ans_list))
+print(splitAreaCount)
+splitAreaCount_list.sort()
+for i in range(len(splitAreaCount_list)):
+  if splitAreaCount_list[i]!=0:
+    print(splitAreaCount_list[i], end=' ')
