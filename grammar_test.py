@@ -1,34 +1,55 @@
-# 1018 체스판 다시 칠하기
+# 2583 영역 구하기
 import sys
-input= sys.stdin.readline
 from collections import deque
+input= sys.stdin.readline
+# M= 모눈종이의 세로 크기
+# N= 모눈종이의 가로 크기
+# K= 모눈종이 위에 K개의 직사각형
+M,N,K= map(int, input().split())
+graph_matrix = [[0]*(N) for _ in range(M)]
 
-N,M = map(int, (input().split()))
-graph_matrix=[]
-for i in range(N):
-  graph_matrix.append(list(input().rstrip()))
+# 4방향검사
+dx=[0,0,1,-1]
+dy=[1,-1,0,0]
 
-ans=[]
+# ex) (0,2), (4,4)
+# ex) 4-0, 4-2 = 4(가로길이), 2(세로길이)
+for _ in range(K):
+  left_x, left_y, right_x, right_y= map(int, input().split())
+  for i in range(left_y, right_y): #세로길이 범위
+    for j in range(left_x, right_x): #가로길이 범위
+      graph_matrix[(M-1)-i][j]=1
 
-for i in range(N-7):
-  for j in range(M-7):
-    index1=0 # 왼쪽 맨 위가 W일때 바꿔야할 체스판 갯수
-    index2=0 # 왼쪽 맨 위가 B일때 바꿔야할 체스판 갯수
-    # 이 2가지 경우를 index1, index2를 통해 한번의 이중 for문으로 바꿔야할 체스판의 갯수를 동시에 구할 것이다. 
-    for a in range(i, i+8): #세로
-      for b in range(j, j+8): #가로
-        # 현재 행,열의 번호 a,b의 합이 짝수일 경우 시작점과 색이 같아야 함.
-        # 현재 행,열의 번호 a,b의 합이 홀수일 경우 시작점과 색이 달라야 함.
-        if (a+b)%2==0: # 짝수이니까 시작점과 색이 같아야 함.
-          if graph_matrix[a][b] != 'B':
-            index1+=1
-          if graph_matrix[a][b] != 'W':
-            index2+=1
-        else:
-          if graph_matrix[a][b] != 'W':
-            index1+=1
-          if graph_matrix[a][b] != 'B':
-            index2+=1
-    ans.append(min(index1,index2))
 
-print(min(ans))
+def BFS_adj_list(graph_matrix, first_x, first_y):
+    queue= deque()
+    queue.append((first_x,first_y))
+    graph_matrix[first_x][first_y]=1 #방문 체크
+    count=1 # 위에서 방문체크 먼저 해줬으므로 1부터 시작.
+    while queue:
+        x,y = queue.popleft()
+        # 4방향 검사
+        for i in range(4):
+            nx= x+dx[i]
+            ny= y+dy[i]
+            if 0<= nx < M and 0<= ny< N:
+                if graph_matrix[nx][ny]==0:
+                    graph_matrix[nx][ny]=1 #방문체크
+                    count+=1
+                    queue.append((nx,ny))
+    return count
+
+splitAreaCount=0
+splitAreaCount_list=[]
+
+for i in range(M):
+  for j in range(N):
+    if graph_matrix[i][j]==0:
+      splitAreaCount+=1
+      splitAreaCount_list.append(BFS_adj_list(graph_matrix, i, j))
+
+print(splitAreaCount)
+splitAreaCount_list.sort()
+for i in range(len(splitAreaCount_list)):
+  if splitAreaCount_list[i]!=0:
+    print(splitAreaCount_list[i], end=' ')
