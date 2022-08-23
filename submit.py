@@ -1,50 +1,28 @@
-# 2636 치즈
+# 1074 Z
 import sys
-from collections import deque
 input= sys.stdin.readline
+# r행 c열
+N, r, c= map(int, input().split())
 
-# N= 사각형 모양 판의 세로
-# M= 사각형 모양 판의 가로 
-N,M = map(int, input().split())
-graph_matrix = [list(map(int, input().rstrip().split())) for _ in range(N)]
-
-# 4방향검사
-dx=[0,0,1,-1]
-dy=[1,-1,0,0]
-
-def BFS_adj_list(graph_matrix, first_x, first_y):
-    visited= [[False]*(M) for _ in range(N)]
-    queue= deque()
-    queue.append((first_x,first_y))
-    visited[first_x][first_y]= True
-    count=0
-    while queue:
-        x,y = queue.popleft()
-        # 4방향 검사
-        for i in range(4):
-          nx= x+dx[i]
-          ny= y+dy[i]
-          if 0<= nx < N and 0<= ny< M and visited[nx][ny]==False:
-              if graph_matrix[nx][ny]== 1: # 치즈가 있는 칸이면
-                visited[nx][ny]= True
-                graph_matrix[nx][ny]=0  # 치즈가 녹았음을 표현
-                count+=1
-              elif graph_matrix[nx][ny]== 0: # 치즈가 없는 칸이면
-                visited[nx][ny]= True
-                queue.append((nx,ny))
-    result.append(count)
-    return count # count는 그 단계에서 몇 개의 치즈가 녹았는지를 판단해줌.
-
-result= []
-time_cheese=0
-# 치즈 위치가 0이면 큐에 넣어서 BFS 돌리고 
-# 1을 만날 때마다 0으로 바꿔주면서 time 증가시키면 가장자리부터 처리되는거
-while True:
-  count= BFS_adj_list(graph_matrix, 0, 0)
-  if count==0:
-    break
-  time_cheese+=1
-
-print(time_cheese) 
-# 마지막은 count가 0일테니까 마지막 그 전을 출력
-print(result[len(result)-2])
+# 2^N X 2^N => Z모양 탐색
+# N=2 => 4X4 2차원 배열 -> 2X2로 4등분
+count=0
+def solve(N, x, y): #행렬
+  global count
+  if x==r and y==c:
+    print(round(count))
+    exit()
+  if N==1: # N=1이면 => 2X2 배열이고 조건에 맞지 않다면 그 분면은 지나치는거니 +1씩
+    count+=1
+    return
+  # N=3이면 -> 8X8배열이고 -> 8/2이면->4 => 2X2배열 4개 -> x,y범위인 0~1 까지 중 r,c 없으면 그 배열 크기만큼 +해줌
+  # N=4이면 -> 16X16배열이고 -> 16/2이면-> 8 => 4X4배열 4개-> x,y범위인 0~4까지 중 r,c 없으면 그 배열 크기만큼 +해줌
+  if not (x<= r <x+N and y<= c <y+N):
+    count += N*N
+    return
+  solve(N/2, x, y) # 2사분면
+  solve(N/2, x, y+N/2) # x=행 , y=열이므로 이게 1사분면 가리킴.
+  solve(N/2, x+N/2, y) # 3사분면
+  solve(N/2, x+N/2, y+N/2) # 4사분면
+    
+solve(2**N,0,0) # N=2 -> 4X4
