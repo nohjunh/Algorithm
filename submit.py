@@ -1,4 +1,6 @@
 #2579 계단오르기
+#https://daimhada.tistory.com/181
+#이 tistory에 문제 접근 정리가 잘되어있음
 import sys
 input= sys.stdin.readline
 # 계단의 갯수
