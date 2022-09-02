@@ -1,20 +1,22 @@
-# 9461 파도반수열
+#2579 계단오르기
 import sys
 input= sys.stdin.readline
+# 계단의 갯수
+N=int(input())
+# 계단 점수 배열
+score=[]
+# 유효한 계단 점수의 인덱스를 1번부터 시작하기 위해 그냥 0번째 인덱스에 0을 넣음 (i-3에서 i가 3이되서 i=0이 되면 계단 출발 전의 범위고 0의 값이니까 0의 값은 최종값에 영향이 없게 됨.)
+score.append(0)
+for _ in range(N):
+  score.append(int(input().rstrip()))
 
-T=int(input().rstrip())
-DP=[0 for _ in range(101)]
-DP[0]=1
-DP[1]=1
-DP[2]=1
-DP[3]=2
-DP[4]=2
-for i in range(5, 101):
-  DP[i]= DP[i-1]+DP[i-5]
-#DP[5]=DP[0]+DP[4] => 5-1 + 5-5
-#DP[6]=DP[1]+DP[5] => 6-5 + 6-1
-#DP[7]=DP[2]+DP[6] => 7-1 + 7-7
-#DP[8]=DP[3]+DP[7] => 8-1 + 8-5 
-for _ in range(T):
-  N=int(input().rstrip())
-  print(DP[N-1])
+# 해당 번째 계단을 밟았을때의 최댓값 DPlist
+DP_list=[0 for _ in range(N+1)]
+if N==1:
+  print(score[1])
+else:
+  DP_list[1]= score[1]
+  DP_list[2]= score[1] + score[2]
+  for i in range(3, N+1):
+    DP_list[i]= max(score[i]+score[i-1]+DP_list[i-3], score[i]+DP_list[i-2])
+  print(DP_list[N])
