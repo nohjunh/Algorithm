@@ -1,44 +1,59 @@
-class disjointSet:
-  def __init__(self, n):
-    # 각자 다른 집합이 된다. 모두가 자기자신을 루트노드로 가짐.
-    self.data= [-1 for _ in range(n)] # -1의 값을 가지면 루트노드라는 뜻
-    self.size = n 
-  def find(self, idx):
-    parent = self.data[idx] # idx번 노드의 부모노드를 찾음
-    if parent < 0: # 부모노드가 -1이라면 루트노드라는 것이므로
-      return idx # 해당 idx번 노드가 루트노드임. 따라서 루트노드 index를 반환 
-    return self.find(parent) # 루트노드가 아니니 재귀함수를 통해 해당 노드의 루트노드까지 찾음
+import math
 
-  def union(self, x,y):
-    x,y = self.find(x), self.find(y) # x,y노드의 부모노드를 찾음 (find함수니 루트노드까지 찾게 되는거.)
-    if x==y: # 부모노드가 같다면
-      return #union 함수 수행할 필요X
-    if x < y:
-      self.data[y]=x # x노드의 부모노드를 y노드의 부모노드로 넣음 => 하나의 집합이 됨.
-    else:
-      self.data[x]=y
-    self.size -= 1 # 집합이 하나로 합쳐졌으니 집합의 수 감소
+def ccw(i, j, k):
+  area2= (j[0] - i[0]) * (k[1] - i[1]) - (j[1] - i[1]) * (k[0] - i[0])
+  if area2 > 0:
+    return True # 반시계방향 turn
+  else:
+    return False # 시계방향 turn
 
-  def check(self, ans):
-    for i in range(len(ans)):
-      ans[i]=self.find(ans[i]-1)
-    comp= ans[0]
-    for i in range(1, len(ans)):
-      if ans[i]!=comp:
-        return "NO"
-    return "YES"
+def get_P_Points(testPoints):
+  testPoints= sorted(testPoints, key = lambda p: (p[1],-p[0])) # y값 기준 오름차순(y값이 제일 작은 값 찾음), x값 기준 내림차순 (x값이 제일 큰 값 찾음)
+  return (testPoints[0][0], testPoints[0][1])  ## max_X_Value= testPoints[0][0], small_Y_Value= testPoints[0][1]
 
-N= int(input())
-M= int(input())
-unionFind= disjointSet(N)
-matrix=[]
-for i in range(N):
-  matrix.append(list(map(int, input().split())))
+def angle_Cal(points, p_Value): # 점 p로부터 반시계방향으로 거쳐가는 차례로 포함
+  points= sorted(points, key= lambda x:x[1]) #########중요######### -> 같은 각도일때 탐색 순서를 맞춰주기 위함.
+  angleOrder=[]
+  radian_Set=[]
+  j=0
+  for i in points:
+    if i==p_Value:
+      j+=1
+      continue
+    radian= math.atan2(i[1]-p_Value[1], i[0]-p_Value[0])
+    #degree= radian*180 / math.pi
+    radian_Set.append((j, radian))
+    j+=1
+  radian_Set= sorted(radian_Set, key=lambda x:x[1])
+  for i in radian_Set:
+    angleOrder.append(points[i[0]])
+  return angleOrder
 
-for i in range(N):
-  for j in range(N):
-    if matrix[i][j]==1:
-      unionFind.union(i, j)
+def grahamScan(points):
+  p_Value= (get_P_Points(points))
+  hull=[]
+  hull.append(p_Value)
+  angleOrder= angle_Cal(points, p_Value)
+  angleOrder.append(p_Value) # 마지막 p_Value랑 연결해서 판단하게 하기위함
+  for k in angleOrder:
+    while len(hull) >=2:
+      # stack기능이라고 생각해야되므로 append시 맨 뒤에 붙는거 고려.
+      # 맨 뒤에서부터 한 두 개씩 가져온다.
+      i,j = hull[-2], hull[-1] # [-1]: first, [-2]: second
+      if ccw(i,j,k): 
+        break # true이면 second값 hull에 그대로 있으면 됨.
+      hull.pop() # false면 pop해서 second값 빼줌
+    hull.append(k)
+  hull.pop(-1) # 마지막 하나 추가한 p_Value가 hull에 들어가기에 빼줌(중복값)
+  return hull
 
-ans= list(map(int, input().split()))
-print(unionFind.check(ans))
+
+if __name__ == "__main__":
+  # 백준 test_case
+   hull=[]
+   N=int(input())
+   for i in range(N):
+     a,b=map(int,input().split())
+     hull.append((a,b))
+   hull= grahamScan(hull)
+   print(len(hull))
