@@ -1,90 +1,71 @@
+// 우선 순위 큐를 이용해
+// 방문할 수 있는 정점 중 가중치가 가장 낮은 정점으로 이동
+/*
+/////////////////////////////
+// 우선순위 큐를 <자료형, 구현체, 비교연산자> 를 이용하여 선언한다.
+// 비교연산자에 greater<int>를 사용하여 int가 작은값이 우선한다.
+priority_queue <int, vector<int>, greater<int> > pq;
+//////////////////////////////////////////////
+*/
+
+
+#include<queue>
 #include <iostream>
+#include <cstdio>
 #include <vector>
-#include <algorithm>
+#include <queue>
 using namespace std;
 
-int check[10001];
+#define MAX_SIZE 10001
 
-class Edge {
-public:
-   int node[2]; // node[0]은 A노드, node[1]은 B노드를 가리킴
-   int distance; // 가중치
-   Edge(int a, int b, int distance) {
-       this->node[0] = a;
-       this->node[1] = b;
-       this->distance = distance;
-   }
+bool visit[MAX_SIZE] = { false };
+vector<pair<int, int>> Edge[10001];
 
-   // edge를 오름차순으로 정렬할 때 기준을 distance로 정함.
-   bool operator < (Edge& edge) {
-       return this->distance < edge.distance;
-   }
-};
+int prim() {
 
-int getParent(int node) { // 노드의 parent 집합 구하기.
-   if (check[node] == node) { // 해당 집합 component 번호 리턴
-       return node;
-   }
-   return getParent(check[node]); // 해당 component의 root의 번호를 찾을 때 까지 올라감.
+    int sum = 0;
+    // 우선 순위 큐(최소 힙)
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push(make_pair(0, 1)); // 1번 정점부터 시작 // 가중치=0
+
+    while (!pq.empty()) {
+        pair<int, int> current = pq.top();
+        pq.pop();
+
+        if (visit[current.second]) { // 방문 했었다면 판단할 필요 없으므로 그냥 넘김
+            continue;
+        }
+
+        // prim은 visit 체크를 함으로써 사이클을 방지한다.
+        visit[current.second] = true; // 방문처리 해줌.
+
+        sum += current.first; // 가중치를 더해줌.
+
+        // 각 Node와 연결되는 Edge 정보를 가지고 있는데,
+        // 현재 Node에서 이동할 수 있는 방문하지 않은 Node를 Push !
+        for (int i = 0; i < Edge[current.second].size(); i++) {
+            if (visit[Edge[current.second][i].second] == false) { // Node정보가 나올 것이다. 만약 방문하지 않았다면,
+                pq.push(Edge[current.second][i]); // pq에 넣게되면 알아서 최솟값이 root로 올라갈 것이다. 그래서 최솟값 선별이 가능해짐.
+            }
+        }
+    }
+    return sum;
 }
-
-// 두 노드를 작은 값을 가지는 component 기준으로 연결한다.
-void Union(int node1, int node2) {
-   node1 = getParent(node1);
-   node2 = getParent(node2);
-   if (node1 < node2) {
-       check[node2] = node1;
-   }
-   else {
-       check[node1] = node2;
-   }
-}
-
-// 사이클이 존재하면 true, 아니면 false 반환
-bool isCycle(int node1, int node2) {
-   node1 = getParent(node1);
-   node2 = getParent(node2);
-   if (node1 == node2) { // node1과 node2가 같은 component에 있는데
-                           // 연결하게 되면 사이클이 생성되는 원리
-       return true; // 사이클이 존재
-   }
-   else {
-       return false;
-   }
-}
-
 
 int main() {
-   // 두 노드를 연결할 간선을 정함.
-   vector<Edge> v;
-   int V, E; // 정점의 수, 간선의 수
-   cin >> V >> E;
+    int V, E;
+    cin >> V >> E;
 
-   int A, B, C;
-   for (int i = 0; i < E; i++) {
-       cin >> A >> B >> C;
-       v.push_back(Edge(A, B, C));
-   }
+    for (int i = 0; i < E; i++) {
+        int A, B, C;
+        cin >> A >> B >> C;
 
-   // 간선을 오름차순으로 정렬
-   // 간선의 가중치가 작은 값부터 차례로 사이클 조사해가면서 tree를 연결해줄 것이다.
-   sort(v.begin(), v.end());
+        // push_back에 들어가는 pair의 first=가중치, second= 두번째 node
+        Edge[A].push_back(make_pair(C, B));
+        Edge[B].push_back(make_pair(C, A));
+    }
 
-   // check값을 각 노드 index로 초기화= 자기자신이 자기자신의 component번호
-   for (int i = 1; i <= V; i++) {
-       check[i] = i;
-   }
+    cout << prim() << endl;
 
-   int sum = 0; // Minimum Spanning tree 총 비용
-   for (int i = 0; i < v.size(); i++) {
-       // 사이클이 존재하지 않으면 해당 간선을 연결하고 가중치를 더함.
-       if (!isCycle(v[i].node[0], v[i].node[1])) { // 사이클이 아니라면
-           sum += v[i].distance;
-           Union(v[i].node[0], v[i].node[1]); // 두 노드가 연결 됐으므로
-                                                   // 같은 component에 속하게 함.
-       }
-   }
-
-   cout << sum <<endl;
-   return 0;
+    return 0;
 }
