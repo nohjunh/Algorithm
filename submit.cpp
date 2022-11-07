@@ -1,71 +1,81 @@
-// 우선 순위 큐를 이용해
-// 방문할 수 있는 정점 중 가중치가 가장 낮은 정점으로 이동
-/*
-/////////////////////////////
-// 우선순위 큐를 <자료형, 구현체, 비교연산자> 를 이용하여 선언한다.
-// 비교연산자에 greater<int>를 사용하여 int가 작은값이 우선한다.
-priority_queue <int, vector<int>, greater<int> > pq;
-//////////////////////////////////////////////
-*/
-
-
-#include<queue>
-#include <iostream>
-#include <cstdio>
 #include <vector>
+#include <iostream>
 #include <queue>
+
+#define MAX 1001 // 정점의 수 2<=N<=1000
+#define INF 99999999
 using namespace std;
 
-#define MAX_SIZE 10001
+int path[1001];
 
-bool visit[MAX_SIZE] = { false };
-vector<pair<int, int>> Edge[10001];
+vector<int> dijkstra(int start, int N, vector<pair<int, int> > graph[]) {
+    vector<int> dist(N + 1, INF);    // 전부 INF로 초기화 
+    priority_queue<pair<int, int> > pq;
 
-int prim() {
+    dist[start] = 0;
+    pq.push(make_pair(0, start));    // start정점 먼저 push, 즉 방문
 
-    int sum = 0;
-    // 우선 순위 큐(최소 힙)
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    pq.push(make_pair(0, 1)); // 1번 정점부터 시작 // 가중치=0
 
     while (!pq.empty()) {
-        pair<int, int> current = pq.top();
+        int cost = -pq.top().first;    // 방문한 정점의 가중치
+        int cur = pq.top().second;    // 현재 위치한 정점
         pq.pop();
 
-        if (visit[current.second]) { // 방문 했었다면 판단할 필요 없으므로 그냥 넘김
+        if (cost > dist[cur]) // 탐색할 필요가 없는 정점이라면 가지치기를 해준다.
             continue;
-        }
 
-        // prim은 visit 체크를 함으로써 사이클을 방지한다.
-        visit[current.second] = true; // 방문처리 해줌.
-
-        sum += current.first; // 가중치를 더해줌.
-
-        // 각 Node와 연결되는 Edge 정보를 가지고 있는데,
-        // 현재 Node에서 이동할 수 있는 방문하지 않은 Node를 Push !
-        for (int i = 0; i < Edge[current.second].size(); i++) {
-            if (visit[Edge[current.second][i].second] == false) { // Node정보가 나올 것이다. 만약 방문하지 않았다면,
-                pq.push(Edge[current.second][i]); // pq에 넣게되면 알아서 최솟값이 root로 올라갈 것이다. 그래서 최솟값 선별이 가능해짐.
+        for (int i = 0; i < graph[cur].size(); i++) {
+            int next = graph[cur][i].first; // 탐색할 다음 정점
+            int adjnextCost = cost + graph[cur][i].second;    // 현재 방문한 정점을 거쳐서 다음 정점을 갈때의 비용 
+            if (adjnextCost < dist[next]) {
+                dist[next] = adjnextCost;    // 최신화
+                path[next] = cur; // 다음 노드로 가는 최단 경로를 나타내기 위해 현재 정점을 넣어줌 즉, A->B 노드가 최단경로일 때 B노드(next)로 가기 위해서는 A노드(cur)를 거쳐서 가야함
+                pq.push(make_pair(-adjnextCost, next));
             }
         }
     }
-    return sum;
+    return dist;
 }
 
-int main() {
-    int V, E;
-    cin >> V >> E;
+int main()
+{
+    int N, M; // N개의 도시, M개의 버스
+    vector<pair<int, int> > graph[MAX];
+    cin >> N;
+    cin >> M;
 
-    for (int i = 0; i < E; i++) {
-        int A, B, C;
-        cin >> A >> B >> C;
-
-        // push_back에 들어가는 pair의 first=가중치, second= 두번째 node
-        Edge[A].push_back(make_pair(C, B));
-        Edge[B].push_back(make_pair(C, A));
+    for (int i = 0; i < M; i++) {
+        int from, to, cost;
+        cin >> from >> to >> cost;
+        graph[from].push_back(make_pair(to, cost));
     }
 
-    cout << prim() << endl;
+    int startCity, endCity;
+    cin >> startCity >> endCity;
+
+    vector<int> dist = dijkstra(startCity, N, graph);
+
+
+    cout << dist[endCity] << endl; // 출발도시에서 도착도시까지 가는데 드는 최소비용
+
+    // vector를 이용한 경로 역추적
+    vector<int> path_vector;
+    int temp = endCity;
+    while (temp) {  // path[temp]의 값이 있다면, 즉 temp(next)노드로 가기 위해 그 전에 거치는 정점이 있다면 벡터에 넣어줌.
+        // 반복하여 넣어주면 벡터에는 end정점~출발정점 순으로 저장되게 됨. 따라서 역순으로 다시 출력해주는 절차가 필요.
+        path_vector.push_back(temp);
+        temp = path[temp];
+    }
+
+    cout << path_vector.size() << endl; // 최소 비용을 갖는 경로에 포함되어있는 도시의 개수
+
+    for (int i = path_vector.size() - 1; i >= 0; i--) {  // 역순으로 경로 출력
+        cout << path_vector[i];
+        if (i != 0) {
+            cout << " ";
+        }
+    }
+    cout << endl;
 
     return 0;
 }
