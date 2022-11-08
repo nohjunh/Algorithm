@@ -1,65 +1,27 @@
+// Hashing
 #include <iostream>
 #include <string>
-#include <vector>
-
 using namespace std;
-#define MAX 101 // 2<=n<=100 개의 도시
-#define INF 100000000
+const int M = 1234567891; // M의 값은 1234567891로 고정하자.
+string str;
+int L;
 
-void solve() {
-	int n, m; // n=도시(정점), m=버스(간선)
-   // a->b 도시로 가는 cost를 2차원 배열에 적어준다. 각 행열 index가 a->b로 가는 것을 알려주고 그 위치에 저장된 값이 cost
-  int graph[MAX][MAX];
-  cin >> n;
-  cin >> m;
+long long Hashing(string str) {
+	long long hash = 0;
+	long long r = 1; // 거듭제곱의 값인 r변수. r의 값은 31로 고정, 31^1 -> 31^2 ...
+ 
+	for (int i = 0; i < L; i++) { // 문자열의 길이만큼 본다.
+		hash = (hash + (str[i] - 'a' + 1) * r) % M; //str[i]-'a'을 해줌으로써 해당 알파벳의 int값을 대응
+		r = (r * 31) % M; // 지수 증가 // 값이 너무 커지니까 유한한 출력을 가질 수 있도록 계속 mod M
+	}
 
-  // 2차원 배열 table 초기화
-  for(int i= 1; i<=n; i++){
-    for(int j=1; j<=n; j++){
-      if(i==j){
-        graph[i][j]=0;
-      }else{
-        graph[i][j]= INF;
-      }
-    }
-  }
-  // 2차원 배열 출발도시 -> 도착도시 cost값 설정
-  for(int i=0; i<m; i++){
-    int from, to, cost;
-    cin >> from >> to >> cost;
-    graph[from][to] = min(graph[from][to], cost);  // 시작 도시와 도착 도시를 연결하는 노선은 하나가 아닐 수 있기에 이런 식으로 표현
-  }
-  // 플로이드 와샬 GoGo
-  // k= 거쳐가는 노드
-  for(int k=1; k<=n; k++){
-    // i= 출발노드
-    for(int i=1; i<=n; i++){
-      // j= 도착노드
-      for(int j=1; j<=n; j++){
-        if(graph[i][k] + graph[k][j] < graph[i][j]){
-          graph[i][j]= graph[i][k]+graph[k][j];
-        }
-      }
-    }
-  }
-  
-  // 결과 출력
-  for(int i=1; i<=n; i++){
-    for(int j=1; j<=n; j++){
-      cout << graph[i][j] << " ";
-    }
-    cout << endl;
-  }
-
+	return hash;
 }
 
+int main() {
 
-int main( ){
-	ios::sync_with_stdio(false);
-	cin.tie(0);
-	cout.tie(0);
-
-	solve();
-
+	cin >> L; // 문자열의 길이 L이 들어온다.
+	cin >> str; // 영문 소문자로만 이루어진 문자열이 들어온다.
+	cout << Hashing(str)<<endl;
 	return 0;
 }
