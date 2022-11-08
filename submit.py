@@ -26,20 +26,3 @@ def collinearPoints(points):
       else:
           counter[value] = 1
     for key, value in counter.items(): # key=기울기, value= 그 기울기가 몇 개가 있는지
-      if value>=3:
-        if (key,i[0],i[1]) in gradient_collection:
-          continue
-        else:
-          index=0 # 마지막 요소의 인덱스값을 저장하기 위함.
-          for j in enumerate(gradient_Set):
-            if j[1]==key:
-              index= j[0]
-              gradient_collection.append((key, points[index+1][0],points[index+1][1]))
-          ans.append((i[0],i[1], points[index+1][0],points[index+1][1]))
-  return ans
-
-if __name__ == "__main__":
-  print(collinearPoints([(0,0), (3,1), (2,3), (4,4), (6,6), (7,7), (9,9)]))
-  print(collinearPoints([(1,0), (2,0), (3,0), (4,0), (5,0), (6,0), (8,0)]))
-  print(collinearPoints([(7,0), (14,0), (22,0), (27,0), (31,0), (42,0)]))
-  print(collinearPoints([(1,1), (2,2), (3,3), (4,4), (2,0), (3,-1), (4,-2), (0,1), (-1,1), (-2,1), (-3,1), (2,1), (3,1), (4,1), (5,1)]))
