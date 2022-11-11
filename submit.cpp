@@ -1,27 +1,67 @@
-// #1715 카드 정렬하기 (우선순위 큐, 그리디)
+// 4625 Painter
 #include <iostream>
-#include <queue>
+#include <algorithm>
+#include <vector>
+#define MAX 12
 using namespace std;
 
+bool compare(int i, int j) {
+	return j < i;
+}
+
 int main() {
-	int N;
-	priority_queue<int, vector<int>, greater<int>> min_heap; // Min_Heap
-	
-	cin >> N;
-	for (int i = 0; i < N; i++) {
-		int input;
-		cin >> input;
-		min_heap.push(input);
+	while (true) {
+		int N, grayColor, kitNum;
+		vector<int> PaintArray;
+		cin >> N;
+		if (N == 0) {
+			exit(0);
+		}
+		for (int i = 0; i < N; i++) {
+			int xml;
+			cin >> xml;
+			PaintArray.push_back(xml);
+		}
+		sort(PaintArray.begin(), PaintArray.end(), compare);
+
+		int gogo = PaintArray.at(0) / 50;
+		if (PaintArray.at(0) % 50 == 0) {
+			kitNum = gogo;
+		}
+		else {
+			kitNum = gogo + 1;
+		}
+
+		cin >> grayColor;
+		vector<int> emptycolor;
+		for (int i = 0; i < N; i++) {
+			emptycolor.push_back((kitNum * 50) - PaintArray[i]);
+		}
+		while (true) {
+			sort(emptycolor.begin(), emptycolor.end(), compare);
+			if (grayColor <= 0) {
+				break;
+			}
+			grayColor--;
+			bool check = false;
+			for (int i = 0; i < 3; i++) {
+				emptycolor[i] = emptycolor[i] - 1;
+			}
+			for (int i = 0; i < 3; i++) {
+				if (emptycolor[i] < 0) {
+					check = true;
+				}
+			}
+			if (check == true) {
+				check = false;
+				kitNum++;
+				for (int i = 0; i < N; i++) {
+					emptycolor[i] += 50;
+				}
+			}
+		}
+		cout << kitNum << endl;
 	}
-	
-	int a, b, all = 0;
-	while (min_heap.size() != 1) {
-		a = min_heap.top(); min_heap.pop();
-		b = min_heap.top(); min_heap.pop();
-		min_heap.push(a + b);
-		all += (a + b);
-	}
-	cout << all << "\n";
 
 	return 0;
 }
