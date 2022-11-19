@@ -1,28 +1,28 @@
-def angle_Cal(points, p_Value): # 점 p로부터 반시계방향으로 거쳐가는 차례로 포함
-  gradient_Set=[]
-  for i in points:
-    if i==p_Value:
-      continue
-    try:
-      gradient= (i[1]-p_Value[1])/(i[0]-p_Value[0])
-      ##### 0.0이 -가 나오는데 결국 같으므로 통일 시키기 위함.
-      if gradient== -0.0:
-        gradient=0.0
-    except:
-      gradient= float('inf')
-    gradient_Set.append(gradient)
-  return gradient_Set
+# copyright sihyunglee@knu.ac.kr
+def mstPrimEager(g):
+    def include(w):
+      included[w] = True
+      for e in g.adj[w]: # w에 인접한 각 각선 w-x에 대해
+        x=e.other(w)
+        if not included[x]:
+          if not pq.contains(x):
+            pq.insert(x, e) # index, key
+          else:
+            if pq.keyOf(x).weight > e.weight:
+              pq.decreaseKey(x, e)
 
-def collinearPoints(points):
-  ans=[]
-  points= sorted(points, key=lambda p:(p[0],p[1]))
-  gradient_collection=[]
-  for i in points:
-    gradient_Set= angle_Cal(points, i)
-    counter = {}
-    for value in gradient_Set:
-      if value in counter:
-          counter[value] += 1
-      else:
-          counter[value] = 1
-    for key, value in counter.items(): # key=기울기, value= 그 기울기가 몇 개가 있는지
+    assert(isinstance(g, WUGraph))
+
+    edgesInMST = [] # Stores edges selected as part of the MST
+    included = [False] * g.V # included[v] == True if v is in the MST
+    weightSum = 0  # Sum of edge weights in the MST    
+    pq = IndexMinPQ(g.V) # Build a IndexMinPQ
+    include(0) # include(0) 호출해 정점 0 에 인접한 정점을 모두 pq에 추가함
+
+    while len(edgesInMST) < g.V-1:
+      e, w = pq.delMin() # key, index
+      edgesInMST.append(e)
+      weightSum += e.weight
+      include(w) # Add to the MST the vertex not yet included
+
+    return edgesInMST, weightSum # EdgesInMST, Weight
