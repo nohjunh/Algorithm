@@ -1,37 +1,19 @@
-# 5430 AC
-import re
-import sys
-from collections import deque
+# Image Augmentation using Numpy
+# https://www.kaggle.com/code/ichigoku/image-augmentation-using-numpy
 
-T= int(sys.stdin.readline())
-for _ in range(T):
-  reverse= False
-  check= False
+import numpy as np
 
-  inputFunction = sys.stdin.readline()
-  n = int(sys.stdin.readline())
-  inputNumber= sys.stdin.readline().rstrip()[1:-1].split(',')
-  if n==0:
-    inputNumber= deque()
-  dQueue = deque(inputNumber)
-  for f in inputFunction:
-    if f=='R':
-      if reverse:
-        reverse= False
-      else:
-        reverse= True
-    elif f=='D':
-      if dQueue:
-       if reverse==True:
-         dQueue.pop()
-       else:
-         dQueue.popleft()
-      else:
-        check=True
-        print("error")
-        break
-  if(reverse==True and check==False):
-    dQueue.reverse()
-    print('['+ ",".join(dQueue) + ']')
-  if(reverse==False and check==False):
-    print('['+ ",".join(dQueue) + ']')
+image_path = ""
+im = Image.open(image_path)
+image = np.array(im)
+
+# filipud
+new_img = np.flipud(image)
+
+# rotation
+new_img = np.rot90(image)
+
+# roll
+new_img = np.roll(image, 1, axis=0)
+new_img = np.roll(image, 2, axis=1)
+
