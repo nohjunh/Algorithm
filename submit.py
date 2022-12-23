@@ -1,36 +1,43 @@
-class BFS:
-    # PerformBDFS on graph g starting from the source vertex s
-    def __init__(self, g, s):        
-        self.g, self.s = g, s
-        self.visited = [False for _ in range(g.V)]
-        self.fromVertex = [None for _ in range(g.V)]
-        self.distance = [None for _ in range(g.V)]
-        queue = Queue()
-        queue.put(s)        
-        self.visited[s] = True
-        self.distance[s] = 0
-        while queue.qsize() > 0:         
-            v = queue.get()
-            for w in g.adj[v]:
-                if not self.visited[w]:
-                    queue.put(w)
-                    self.visited[w] = True
-                    self.fromVertex[w] = v
-                    self.distance[w] = self.distance[v] + 1
+# 1707 Bipartite Graph
+import sys
+import queue
+input = sys.stdin.readline
+sys.setrecursionlimit(20000)
 
-    # Return a list of vertices on the path from s to v
-    def pathTo(self, v):
-        if not self.visited[v]: return None
-        path = []
-        while v != self.s:
-            path.append(v)
-            v = self.fromVertex[v]
-        path.append(self.s)
-        path.reverse()
-        return path
+def BFS(s):
+  q = queue.Queue()
+  q.put(s)
+  color[s]= 1
+  while not q.empty():
+    u = q.get()
+    for v in graph[u]:
+      if color[v] == 0:
+        if color[u] == 1:
+          color[v] = 2
+        else:
+          color[v] = 1
+        q.put(v)
+      elif color[v] == color[u]:
+        return False
+  return True
 
-    def hasPathTo(self, v):
-        return self.visited[v]
 
-    def distTo(self, v):
-        return self.distance[v]
+answer= True
+K= int(input())
+for _ in range(K):
+  V, E = map(int, input().split())
+  graph = [[] for _ in range(V+1)]
+  color = [0 for _ in range(V+1)] # 0이면 아직 방문 안한거, 1이면 A그룹, 2이면 B그룹
+  for _ in range(E):
+    a,b = map(int, input().split())
+    graph[a].append(b)
+    graph[b].append(a)
+  for i in range(1, V+1):
+    if color[i] == 0:
+      answer = BFS(i)
+      if not answer:
+        break
+  if answer==True:
+    print("YES")
+  else:
+    print("NO")
