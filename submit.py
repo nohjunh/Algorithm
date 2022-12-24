@@ -1,39 +1,19 @@
-# 11657 타임머신, bellman_ford algorithm
+#2156 포도주 시식
 import sys
-input = sys.stdin.readline
-INF = float('inf')
+input= sys.stdin.readline
 
-def bellman_ford(graph, start):
-  distTo[start] = 0
+n= int(input())
+wine = []
+DP = []
+for _ in range(n):
+  wine.append(int(input()))
 
-  # 정점 개수만큼 반복
-  for i in range(N):
-    for v in range(1, N+1):
-      for w, weight in graph[v]:
-        if distTo[v] != INF and distTo[w] > distTo[v] + weight:
-          distTo[w] = distTo[v] + weight
-          edgeTo[w] = v
-          if i == N-1: # 값이 갱신될 수 있다면 음의 순환 존재
-            return False
-  return True
-          
+DP.append(wine[0])
+if n > 1: # index-error 방지
+  DP.append(wine[0]+wine[1])
+if n > 2:
+  DP.append(max(wine[0]+wine[2], wine[1]+wine[2], DP[1]))
+for i in range(3, n):
+  DP.append(max(DP[i-2]+wine[i], DP[i-3]+wine[i-1]+wine[i], DP[i-1]))
 
-N, M = map(int, input().split())
-graph= [[] for _ in range(N+1)]
-distTo= [INF] * (N+1)
-edgeTo= [None] * (N+1)
-
-for _ in range(M):
-  A,B,C = map(int, input().split())
-  graph[A].append((B,C))
-
-result = bellman_ford(graph, 1)
-
-if result == False:
-  print(-1)
-else:
-  for i in range(2, N+1):
-    if distTo[i] == INF:
-      print(-1)
-    else:
-      print(distTo[i])
+print(max(DP))
