@@ -1,38 +1,43 @@
-# Top-down merge-sort는 함수 호출/ 반환 과정에서 함수 인자, 지역변수 등을
-# 메모리에 저장/ 삭제를 하는 과정을 반복하게 된다.
-# 따라서, 이러한 과정을 통한 시간/공간 Overhead가 크게 된다.
-# Bottom-up Merge Sort를 통해 Divide를 위한 재귀 호출 과정을 생략하여 Merge로만 sorting이 되도록 진행한다.
-# sz=1에서 시작
-# 크기 sz인 인접한 부분집합끼리 병합 -> sz 2배하고 sz>=N이 될 때까지 반복
+# 코딩테스트 Good Code #Part 1
 
-# Copyright by Sihuing Lee
+# 1-1. 나누어 입력 받기
+#a, b = map(int, input().split())
 
+# 1-2. 입력 출력 가속
+#from sys import stdin, stdout
+#input = stdin.readline
+#print = stdout.write
 
-def merge(a, aux, lo, mid, hi):
-    for k in range(lo, hi+1):
-        aux[k] = a[k] # 예비 배열에 a[k]를 옮김 -> a[k]를 결과배열로 쓰기 위함.
-        # 단, 어차피 배열을 인자로 전달하는 것이므로 주소를 복사할 것임. 즉, 새로 배열을 만드는 과정이 아니라
-        # 정렬 결과를 바로바로 a[]에 적용시키는 것임.
-    
-    i, j = lo, mid+1
-    for k in range(lo, hi+1):
-        if i>mid: a[k], j = aux[j], j+1            
-        elif j>hi: a[k], i = aux[i], i+1            
-        elif aux[i] <= aux[j]: a[k], i = aux[i], i+1
-        else: a[k], j = aux[j], j+1            
+# 2-1. 우아한 배열 입력
+# 3
+# 1 2 3
+# 4 5 6
+# 7 8 9
+#graph = [list(map(int, input().split())) for _ in range(int(input()))]
 
-    return a
+# 2-2. 정수와 배열이 같은 줄에 들어오는 경우
+# 4 10 20 30 40
+# 3 7 5 12
+# 3 122 21 43
+# 변수 앞에 *을 붙이면 뒤이어 나오는 값이 배열 형태로써 변수에 저장.
+# N, *arr = map(int, input().split())
 
-def mergeSort(a):
-    aux = [None] * len(a)
+# 2-3. 문자열을 한 글자씩 배열에 저장
+# 3
+# AAAA
+# BBBB
+# CCCC
+# list를 input 앞에 붙이면 input문자열을 글자 단위로 나눠서 저장.
+# arr = [list(input()) for _ in range(int(input()))]
 
-    sz = 1
-    while( sz < len(a) ):
-        for lo in range(0, len(a)-sz, sz*2):
-            merge(a, aux, lo, lo+sz-1, min(lo+sz+sz-1, len(a)-1))            
-        sz += sz  # 2배 -> 2배 -> 2배 ...
+# 3-1. 배열을 연결해서 출력 1
+# arr = [1,2,3,4] -> 1234로 출력
+# map함수로 arr에 저장되어 있는 정수 값을 string타입으로 타입변환한 후 "".join으로 공백없이 값 출력
+# arr= [1,2,3,4]
+# print("".join(map(str,arr)))
 
-    return a
+# 3-2. 배열을 연결해서 출력 2
+# 배열에서 요소를 각각 출력하는 방법 -> 띄어쓰기까지 가능
+# arr = [1,2,3,4]
+# print(*arr)
 
-if __name__ == "__main__":
-    print(mergeSort([10, 9, 3, 2, 6, 7]))
