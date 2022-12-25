@@ -1,43 +1,94 @@
-# 코딩테스트 Good Code #Part 1
+# 코딩테스트 Good Code #Part 2
 
-# 1-1. 나누어 입력 받기
-#a, b = map(int, input().split())
+# 1-1. 최대, 최소 우아하게 범위 지정
+# from sys import stdin, stdout, maxsize
+# ans = maxsize
+# minsize = -maxsize
+# print(ans)
+# print(minsize)
 
-# 1-2. 입력 출력 가속
-#from sys import stdin, stdout
-#input = stdin.readline
-#print = stdout.write
-
-# 2-1. 우아한 배열 입력
+# 1-2. 진법 연산
 # 3
-# 1 2 3
-# 4 5 6
-# 7 8 9
-#graph = [list(map(int, input().split())) for _ in range(int(input()))]
+# 1001101 10010
+# 1001001 11001
+# 1000111 1010110
+# from sys import stdin, stdout
+# input = stdin.readline
+# print = stdout.write
+# for _ in range(int(input())):
+  # A, B = map(int, input().split())
+  # print(bin(A)+bin(B))
 
-# 2-2. 정수와 배열이 같은 줄에 들어오는 경우
-# 4 10 20 30 40
-# 3 7 5 12
-# 3 122 21 43
-# 변수 앞에 *을 붙이면 뒤이어 나오는 값이 배열 형태로써 변수에 저장.
-# N, *arr = map(int, input().split())
+# 3-1. 문자열 거꾸로
+# str = "ABCD"
+# print(str)
+# reverseStr = str[::-1]
+# print(reverseStr)
 
-# 2-3. 문자열을 한 글자씩 배열에 저장
-# 3
-# AAAA
-# BBBB
-# CCCC
-# list를 input 앞에 붙이면 input문자열을 글자 단위로 나눠서 저장.
-# arr = [list(input()) for _ in range(int(input()))]
+# 4-1. 배열 초기화
+# 3 5
+# 가로 3, 세로 5인 graph 배열로 생성
+# from sys import stdin
+# input = stdin.readline
+# N, M = map(int, input().split())
+# arr = [[0]*N for _ in range(M)]
+# print(arr)
 
-# 3-1. 배열을 연결해서 출력 1
-# arr = [1,2,3,4] -> 1234로 출력
-# map함수로 arr에 저장되어 있는 정수 값을 string타입으로 타입변환한 후 "".join으로 공백없이 값 출력
-# arr= [1,2,3,4]
-# print("".join(map(str,arr)))
-
-# 3-2. 배열을 연결해서 출력 2
-# 배열에서 요소를 각각 출력하는 방법 -> 띄어쓰기까지 가능
+# 4-2 배열의 원소를 거꾸로
 # arr = [1,2,3,4]
-# print(*arr)
+# print(arr)
+# arr.reverse()
+# print(arr)
 
+# 4-3. 배열 특정 원소 갯수
+# arr = [1,2,3,3,4]
+# print(arr.count(3))
+
+# 4-4. 원소 중복 제거
+# set을 이용해서 처리한다. set은 중복값을 허용하지 않음, 원소의 순서도 고려하지 않음.
+# alpha = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'c', 'd' ] 
+# print(alpha)
+# alpha = list(set(alpha))
+# print(alpha)
+
+# 2차원 리스트에서 중복된 리스트를 제거하려면
+# lst = [[1,2], [1,2], [1]] 
+# print(list(set(map(tuple, lst))))
+
+# 4-5. 배열 정렬
+# arr= [32,2,4,6]
+# print(arr)
+# arr.sort() # 오름차순
+# print(arr)
+# arr.sort(reverse=True) # 내림차순
+# print(arr)
+
+# 4-5-1. 좌표 정렬하기
+# 5
+# 3 4
+# 1 1
+# 1 -1
+# 2 2
+# 3 3
+# arr = []
+# for _ in range(int(input())):
+#  arr.append( list(map(int, input().split())) )
+# x좌표가 증가하는 순으로, x좌표가 같으면 y좌표가 증가하는 순으로 정렬
+# arr.sort(key=lambda x:(x[0], x[1]))
+# for str in arr:
+#  print(str[0], str[1])
+# x좌표가 감소하는 순으로, x좌표가 같으면 y좌표가 감소하는 순으로 정렬
+# arr.sort(key=lambda x:(-x[0], -x[1]))
+# for str in arr:
+#  print(str[0], str[1])
+
+
+# 5-1. 파이썬 삼항
+# a, b = map(int, input().split())
+# print(a,b)
+# a,b 중 더 큰 값을 res에 저장
+# res = a if a > b else b
+# print(res)
+
+# arr= [1,2,3]
+# res = len(arr) if arr.count(3)==5 else print("False")
