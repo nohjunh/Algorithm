@@ -1,94 +1,106 @@
-# 코딩테스트 Good Code #Part 2
+# 코딩테스트 Good Code #Part 3
 
-# 1-1. 최대, 최소 우아하게 범위 지정
-# from sys import stdin, stdout, maxsize
-# ans = maxsize
-# minsize = -maxsize
-# print(ans)
-# print(minsize)
+# 1-1. 순열, 조합
+"""
+# for문 사용 ver nC_2
+# 1 2 3 4
+# 1 2 # 1 3 # 1 4 # 2 3 # 2 4 # 3 5
+arr = list(map(int, input().split()))
+for i in range(0, len(arr)):
+  for j in range(i+1, len(arr)):
+    print(arr[i], arr[j])
 
-# 1-2. 진법 연산
-# 3
-# 1001101 10010
-# 1001001 11001
-# 1000111 1010110
-# from sys import stdin, stdout
-# input = stdin.readline
-# print = stdout.write
-# for _ in range(int(input())):
-  # A, B = map(int, input().split())
-  # print(bin(A)+bin(B))
+# itertools를 사용한 조합(combination)
+from itertools import combinations
+print(list(combinations( [1,2,3,4], 2 )))
+"""
 
-# 3-1. 문자열 거꾸로
-# str = "ABCD"
-# print(str)
-# reverseStr = str[::-1]
-# print(reverseStr)
+"""
+# 1~N까지 자연수 중에서 가능한 조합 리스트 다 출력
+from sys import stdin
+from itertools import combinations
+input = stdin.readline
 
-# 4-1. 배열 초기화
-# 3 5
-# 가로 3, 세로 5인 graph 배열로 생성
-# from sys import stdin
-# input = stdin.readline
-# N, M = map(int, input().split())
-# arr = [[0]*N for _ in range(M)]
-# print(arr)
+N, M = map(int, input().split())
+arr = [i for i in range(1, N+1)]
+print(list(combinations(arr, M)))
+"""
 
-# 4-2 배열의 원소를 거꾸로
-# arr = [1,2,3,4]
-# print(arr)
-# arr.reverse()
-# print(arr)
+# 1-3. 순열
+"""
+from itertools import permutations
+N, M = map(int, input().split())
+arr = [i for i in range(1, N+1)]
+print(list(permutations(arr, 2)))
+"""
 
-# 4-3. 배열 특정 원소 갯수
-# arr = [1,2,3,3,4]
-# print(arr.count(3))
+# 2-1. 빈도 계산
+"""
+# Counter는 dict클래스의 하위 클래스로, 리스트나 튜플에서
+# 각 데이터가 등장한 횟수를 dict형식으로 리턴해줌.
+from collections import Counter
+colors = ['red', 'blue', 'red', 'green', 'blue', 'blue']
+cnt = Counter(colors)
+print(cnt)
+# 상위 2개의 결과만 원하면
+# print(cnt.most_common(2))
+"""
+"""
+from collections import Counter
+arr = [int(input()) for _ in range(int(input()))]
+val = Counter(arr).most_common()
+print(val)
+print(val[0])
+print(val[0][0])
+"""
 
-# 4-4. 원소 중복 제거
-# set을 이용해서 처리한다. set은 중복값을 허용하지 않음, 원소의 순서도 고려하지 않음.
-# alpha = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'c', 'd' ] 
-# print(alpha)
-# alpha = list(set(alpha))
-# print(alpha)
+# 3-1. 최소힙, 최대힙
+"""
+import heapq
+# heapq의 default는 최소힙
+heap = []
+heapq.heappush(heap, 3)
+heapq.heappush(heap, 1)
+heapq.heappush(heap, 10)
+heapq.heappush(heap, 5)
+heapq.heappush(heap, 8)
+print(len(heap))
+print(heapq.heappop(heap))
+print(heapq.heappop(heap))
+# 최대 힙은 입력값에 -1을 곱해서 heap에 넣어주면 가장 큰 값이 가장 작은 값이므로 root에 위치하게 된다.
+# heap에서 pop할 때 다시 -1을 곱해주면 원본 값이 나올 것이다.
+"""
 
-# 2차원 리스트에서 중복된 리스트를 제거하려면
-# lst = [[1,2], [1,2], [1]] 
-# print(list(set(map(tuple, lst))))
+# 4-1. deque
+"""
+from collections import deque
+deq = deque()
+deq = deque([i for i in range(1, 5)])
+print(deq)
+deq.appendleft(10)
+print(deq)
+deq.append(-10)
+print(deq)
+print(deq.pop())
+print(deq.popleft())
+print(len(deq))
+print(list(deq))
+# rotate (인자에 양수 -> 인자 수만큼 좌측 회전), (인자에 음수 -> 우측 회전)
+print(list(deq))
+deq.rotate(-1)
+print(list(deq))
+deq.rotate(1)
+print(list(deq))
+"""
 
-# 4-5. 배열 정렬
-# arr= [32,2,4,6]
-# print(arr)
-# arr.sort() # 오름차순
-# print(arr)
-# arr.sort(reverse=True) # 내림차순
-# print(arr)
+# PriorityQueue
+"""
+from queue import PriorityQueue
+que = PriorityQueue()
+que.put(4)
+que.put(10)
+que.put(2)
 
-# 4-5-1. 좌표 정렬하기
-# 5
-# 3 4
-# 1 1
-# 1 -1
-# 2 2
-# 3 3
-# arr = []
-# for _ in range(int(input())):
-#  arr.append( list(map(int, input().split())) )
-# x좌표가 증가하는 순으로, x좌표가 같으면 y좌표가 증가하는 순으로 정렬
-# arr.sort(key=lambda x:(x[0], x[1]))
-# for str in arr:
-#  print(str[0], str[1])
-# x좌표가 감소하는 순으로, x좌표가 같으면 y좌표가 감소하는 순으로 정렬
-# arr.sort(key=lambda x:(-x[0], -x[1]))
-# for str in arr:
-#  print(str[0], str[1])
-
-
-# 5-1. 파이썬 삼항
-# a, b = map(int, input().split())
-# print(a,b)
-# a,b 중 더 큰 값을 res에 저장
-# res = a if a > b else b
-# print(res)
-
-# arr= [1,2,3]
-# res = len(arr) if arr.count(3)==5 else print("False")
+for i in range(len(que.queue)):
+  print(que.queue[i])
+"""
