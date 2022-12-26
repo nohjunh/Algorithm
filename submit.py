@@ -1,19 +1,13 @@
-#2156 포도주 시식
-import sys
-input= sys.stdin.readline
+# 11053 가장 긴 증가하는 부분 수열
+from sys import stdin
+input = stdin.readline
 
-n= int(input())
-wine = []
-DP = []
-for _ in range(n):
-  wine.append(int(input()))
+N= int(input())
+arr= list(map(int, input().split()))
+DP = [1 for _ in range(N)]
 
-DP.append(wine[0])
-if n > 1: # index-error 방지
-  DP.append(wine[0]+wine[1])
-if n > 2:
-  DP.append(max(wine[0]+wine[2], wine[1]+wine[2], DP[1]))
-for i in range(3, n):
-  DP.append(max(DP[i-2]+wine[i], DP[i-3]+wine[i-1]+wine[i], DP[i-1]))
-
+for i in range(N):
+  for j in range(i):
+    if arr[i] > arr[j]:
+      DP[i]= max(DP[i], DP[j]+1)
 print(max(DP))
