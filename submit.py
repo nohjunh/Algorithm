@@ -1,15 +1,28 @@
-# 2565 전깃줄
+# 11054 가장 긴 바이토닉 부분 수열
 from sys import stdin
 input = stdin.readline
 
 N= int(input())
-arr = [list(map(int,input().split())) for _ in range(N)]
-DP = [0 for _ in range(N+1)]
-arr.sort(key = lambda x: x[0])
+arr = list(map(int, input().split()))
+lenDpForWard = [1 for _ in range(N)]
+lenDpBackWard = [1 for _ in range(N)]
+totalDP=[1 for _ in range(N)]
 
 for i in range(N):
   for j in range(i):
-    if arr[i][1] > arr[j][1] and DP[i] < DP[j]:
-      DP[i] = DP[j]
-  DP[i] += 1
-print(N-max(DP))
+    if arr[i] > arr[j]:
+      lenDpForWard[i]= max(lenDpForWard[i], lenDpForWard[j]+1)
+
+arr.reverse()
+
+for i in range(N):
+  for j in range(i):
+    if arr[i] > arr[j]:
+      lenDpBackWard[i]= max(lenDpBackWard[i], lenDpBackWard[j]+1)
+
+lenDpBackWard.reverse()
+
+for i in range(N):
+  totalDP[i]= lenDpForWard[i]+lenDpBackWard[i]
+
+print(max(totalDP)-1)
