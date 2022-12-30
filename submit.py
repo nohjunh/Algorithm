@@ -1,28 +1,27 @@
-# 11054 가장 긴 바이토닉 부분 수열
+#1992 쿼드트리
 from sys import stdin
 input = stdin.readline
 
+def quadTree(x,y,n):
+  global result
+  if n==1:
+    result+=graph[x][y]
+    return;
+  for row in range(x, x+n):
+    for col in range(y, y+n):
+      test = graph[x][y]
+      if graph[row][col] != test:
+        result += '('
+        quadTree(x, y, n//2)
+        quadTree(x, y+n//2, n//2)
+        quadTree(x+n//2, y, n//2)
+        quadTree(x+n//2, y+n//2, n//2)
+        result += ')'
+        return;
+  result+=graph[x][y]
+
 N= int(input())
-arr = list(map(int, input().split()))
-lenDpForWard = [1 for _ in range(N)]
-lenDpBackWard = [1 for _ in range(N)]
-totalDP=[1 for _ in range(N)]
-
-for i in range(N):
-  for j in range(i):
-    if arr[i] > arr[j]:
-      lenDpForWard[i]= max(lenDpForWard[i], lenDpForWard[j]+1)
-
-arr.reverse()
-
-for i in range(N):
-  for j in range(i):
-    if arr[i] > arr[j]:
-      lenDpBackWard[i]= max(lenDpBackWard[i], lenDpBackWard[j]+1)
-
-lenDpBackWard.reverse()
-
-for i in range(N):
-  totalDP[i]= lenDpForWard[i]+lenDpBackWard[i]
-
-print(max(totalDP)-1)
+result = ""
+graph = [list(input().strip()) for _ in range(N)]
+quadTree(0,0,N)
+print(result)
