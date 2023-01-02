@@ -1,27 +1,19 @@
-#1992 쿼드트리
+# 12865 평범한 배낭
 from sys import stdin
 input = stdin.readline
 
-def quadTree(x,y,n):
-  global result
-  if n==1:
-    result+=graph[x][y]
-    return;
-  for row in range(x, x+n):
-    for col in range(y, y+n):
-      test = graph[x][y]
-      if graph[row][col] != test:
-        result += '('
-        quadTree(x, y, n//2)
-        quadTree(x, y+n//2, n//2)
-        quadTree(x+n//2, y, n//2)
-        quadTree(x+n//2, y+n//2, n//2)
-        result += ')'
-        return;
-  result+=graph[x][y]
+N, K = map(int, input().split())
+items= [[0,0]]
+for i in range(N):
+  items.append(list(map(int, input().split())))
+DP = [[0]*(K+1) for _ in range(N+1)]
 
-N= int(input())
-result = ""
-graph = [list(input().strip()) for _ in range(N)]
-quadTree(0,0,N)
-print(result)
+for i in range(1, N+1):
+  W, V = items[i]
+  for j in range(1, K+1):
+    if j < W:
+      DP[i][j] = DP[i-1][j]
+    else:
+      DP[i][j] = max(DP[i-1][j], DP[i-1][j-W]+V)
+
+print(max(DP[N]))
