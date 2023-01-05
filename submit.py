@@ -1,4 +1,5 @@
 # 14889 스타트와 링크
+# https://youtu.be/jKJ5SdUwI9A
 from sys import stdin
 input = stdin.readline
 
