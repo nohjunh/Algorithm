@@ -1,26 +1,31 @@
-# 2170 선 긋기
+# 14889 스타트와 링크
 from sys import stdin
 input = stdin.readline
 
-"""
-1 2 3
-  2 3 4 5
-    3 4 5
-          6 7
-"""
+def DFS(depth, idx):
+  global minAbility
+  teamAability = 0
+  teamBability = 0
+  if depth == N//2: #팀이 나눠졌다면
+    for i in range(N): # 중첩for문을 통해 S_ij + S_ji 값을 더하는 구조
+      for j in range(N):
+        if included[i] and included[j]:
+          teamAability += graph[i][j]
+        elif not included[i] and not included[j]:
+          teamBability += graph[i][j]
+    minAbility = min(minAbility, abs(teamAability-teamBability))
+    return
+  # 팀이 나눠지지 않았다면
+  for idx in range(idx, N):
+    if not included[idx]:
+      included[idx] = True
+      DFS(depth+1, idx+1)
+      included[idx] = False
 
-pointSet= [list(map(int, input().split())) for _ in range(int(input()))]
-pointSet.sort(key = lambda x:x[0])
-tracePointX, tracePointY= pointSet[0]
-result= 0
+N= int(input())
+graph=[list(map(int,input().split())) for _ in range(N)]
+included= [False]*N
+minAbility=1e9
 
-for idx in range(1, len(pointSet)):
-  curPointX, curPointY = pointSet[idx]
-  if tracePointY < curPointX:
-    result += tracePointY-tracePointX
-    tracePointX, tracePointY = pointSet[idx]
-  else:
-    tracePointY = tracePointY if tracePointY > curPointY else curPointY
-result += tracePointY-tracePointX
-
-print(result)
+DFS(0,0)
+print(minAbility)
