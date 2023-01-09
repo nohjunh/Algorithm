@@ -27,7 +27,7 @@ def dfs(i, sum):
     # '/'
     if operNum[3] > 0:
       operNum[3]-=1
-      dfs(i+1, sum/arr[i])
+      dfs(i+1, int(sum/arr[i]))
       operNum[3]+=1
 
 # N = 수의 갯수
