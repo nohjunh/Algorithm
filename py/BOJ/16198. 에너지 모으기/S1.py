@@ -7,7 +7,6 @@ def dfs(arr, energy):
   if len(arr) == 2:
     maxValue = max(maxValue, energy)
     return
-    
   for idx in range(1, len(arr)-1):
     energy_temp = arr[idx-1] * arr[idx+1]
     temp = arr[idx]
