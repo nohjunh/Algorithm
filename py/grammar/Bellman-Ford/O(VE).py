@@ -8,9 +8,9 @@ def bellman_ford(startNode):
   dist[startNode] = 0
   """
   전체 n번 라운드 반복하는데 마지막 라운드에서는 값이 갱신되는지 파악해 음수 순환여부를 확정 짓는다.
-  예를 들어, A->B로의 최단 경로의 크기는 주어진 노드의 갯수 -1개가 최대이다.
-  만약 n-1를 넘는다면 중복된 노드를 또 방문한다는 것이고 이는 음의 순환이 존재한다는 뜻이다.
-  따라서, for문의 range는 0~N-2까지 최단경로 파악에 진행, N-1은 음의 순환 결정을 진행
+  예를 들어, A->B로의 최단 경로의 크기는 주어진 노드의 갯수 -1 (n-1)개가 최대이다.
+  만약 n-1를 넘는다면 중복된 노드를 또 방문한다는 것이고 이는 최단경로라 할 수 없으며, 음의 순환이 존재한다는 뜻이다.
+  따라서, for문의 range는 0~N-2 (n-1개) 까지 최단경로 파악에 진행, N-1은 음의 순환 결정을 진행
   """
   for i in range(N):
     # 매 loop마다 모든 간선 확인
@@ -24,7 +24,7 @@ def bellman_ford(startNode):
         dist[end] = dist[start] + cost
         if i == N-1: # N-1번째 마저도 거리를 최단으로 갱신하는 경우가 존재한다면,
           return True # 음의 순환이 존재
-    return False
+  return False
 
 
 # N= 노드의 개수, M = 간선의 개수
@@ -41,7 +41,7 @@ for _ in range(M):
     # S -> E 의 비용 = T
     edges.append((S, E, T))
 
-# 1번 노드부터 start. 간선 기준으로 loop수행
+# 1번 노드부터 start. 간선 기준으로 loop 수행
 # 음수 순환 여부가 벨만포드 알고리즘 리턴값
 negative_cycle = bellman_ford(1)
 
