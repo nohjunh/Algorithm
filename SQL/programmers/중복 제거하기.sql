@@ -1,0 +1,6 @@
+SELECT COUNT(DISTINCT NAME) AS count
+FROM ANIMAL_INS
+
+-- DISTINCT로 중복제거
+-- COUNT(*) => NULL도 포함해서 COUNT
+-- COUNT(컬럼명) => NULL 제외하고 COUNT
