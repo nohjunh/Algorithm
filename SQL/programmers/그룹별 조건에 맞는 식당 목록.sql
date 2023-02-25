@@ -1,0 +1,15 @@
+WITH TEMP AS
+(
+SELECT *
+FROM REST_REVIEW R, MEMBER_PROFILE M
+WHERE R.MEMBER_ID = M.MEMBER_ID
+)
+SELECT MEMBER_NAME, REVIEW_TEXT, TO_CHAR(REVIEW_DATE, 'YYYY-MM-DD')
+FROM TEMP
+WHERE MEMBER_NAME IN (SELECT MEMBER_NAME
+                      FROM TEMP
+                      GROUP BY MEMBER_NAME
+                      HAVING COUNT(MEMBER_NAME) = (SELECT MAX(COUNT(MEMBER_NAME))
+                                                   FROM TEMP
+                                                   GROUP BY MEMBER_NAME))
+ORDER BY REVIEW_DATE, REVIEW_TEXT
